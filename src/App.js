@@ -1,25 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from 'react-redux';
+import store from "./store"
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import './styles/App.css';
+import Home from "./containers/Home"
+import Error404 from "./containers/errors/Error404"
+import Signup from './containers/auth/Signup';
+import Login from './containers/auth/Login';
+import Activate from './containers/auth/Activate';
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          { /* Error display */}
+          <Route path="*" element={<Error404/>} />
+          <Route exact path="/" element={<Home/>} />
+          {/* Authentication routes */}
+          <Route exact path="/signup" element={<Signup/>} />
+          <Route exact path="/login" element={<Login/>} />
+          <Route exact path="/activate/:uid/:token" element={<Activate/>} />
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 
