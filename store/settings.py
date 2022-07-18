@@ -32,14 +32,16 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 PROJECT_APPS = [
-    'apps.user'
+    'apps.user',    
 ]
 
-ECOMMERCE_APPS = []
+ECOMMERCE_APPS = [
+    'apps.category',
+]
 
 THIRD_PARTY_APPS = [
-    'rest_framework',
     'corsheaders',
+    'rest_framework',    
     'djoser',    
     'social_django',
     'rest_framework_simplejwt',
@@ -62,8 +64,8 @@ CKEDITOR_UPLOAD_PATH = "/media/"
 
 
 MIDDLEWARE = [
-    'social_django.middleware.SocialAuthExceptionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',    
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -141,9 +143,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-pe'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Lima'
 
 USE_I18N = True
 
