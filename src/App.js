@@ -11,6 +11,7 @@ import Login from './containers/auth/Login';
 import Activate from './containers/auth/Activate';
 import ResetPassword from './containers/auth/ResetPassword';
 import PasswordConfirm from './containers/auth/ResetPasswordConfirm';
+import Shop from './containers/Shop';
 
 
 
@@ -21,14 +22,15 @@ function App() {
         <Routes>
           { /* Error display */}
           <Route path="*" element={<Error404/>} />
-          <Route exact path="/" element={<Home/>} />
+          <Route exact path="/" element={<Home/>} />          
           {/* Authentication routes */}
           <Route exact path="/signup" element={<Signup/>} />
           <Route exact path="/signin" element={<Login/>} />
           <Route exact path="/activate/:uid/:token" element={<Activate/>} />
           <Route exact path="/reset_password" element={<ResetPassword/>} />
           <Route exact path="/password/reset/confirm/:uid/:token" element={<PasswordConfirm/>} />
-          
+          {/* Shop */}
+          <Route exact path="/shop" element={<Shop/>} />
         </Routes>
       </Router>
     </Provider>

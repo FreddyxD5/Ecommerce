@@ -44,7 +44,7 @@ export const Activate = ({activate, loading})=>{
                 Activate Account                
             </button>
             }
-            </div>
+            </div> 
           </div>
             
         </Layout>
