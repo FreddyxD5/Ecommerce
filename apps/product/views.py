@@ -15,25 +15,21 @@ from apps.product.api.serializers import ProductSerializer
 from apps.product.models import Product
 from apps.category.models import Category
 # Create your views here.
-def index(self, request):
-    print('q esta pasando?')
+def index(self, request):    
     return HttpResponse('Holitasd e mar')
 
 class ProductDetailView(APIView):    
     permission_classes = [AllowAny]
     serializer_class = ProductSerializer
 
-    def get(self, request, productId, format=None):
-        print('Something something')
-        print(productId)
+    def get(self, request, productId, format=None):        
         try:
             product_id = int(productId)
         except:
             return Response({'error':'Product ID must be an integer'}, status=status.HTTP_404_NOT_FOUND)
 
         if Product.objects.filter(active=True, id=product_id).exists():
-            product = Product.objects.filter(id=product_id).first()
-            print(product)
+            product = Product.objects.filter(id=product_id).first()            
             product = self.serializer_class(product)
             return Response({'product':product.data}, status=status.HTTP_200_OK)
         else:
@@ -43,8 +39,7 @@ class ProductListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, format=None):
-        sortBy = request.query_params.get('sortBy')
-        print(request.query_params)
+        sortBy = request.query_params.get('sortBy')        
         if not (sortBy=='date_created' or sortBy =='price' or sortBy=='sold' or sortBy=='name'):
             sortBy='date_created'
         
@@ -62,16 +57,12 @@ class ProductListView(APIView):
         if limit <= 0:
             limit=6
 
-        if order =='desc':
-            print('Ordena descendientemente')
+        if order =='desc':            
             sortBy='-' + sortBy
             products = Product.objects.order_by(sortBy).all()[:int(limit)]
-        elif order=='asc':
-            print('Ordena asecndientemente')
+        elif order=='asc':            
             products = Product.objects.order_by(sortBy).all()[:int(limit)]
-        else:
-            print('se ordena por fecha de creacion')
-            print(sortBy)
+        else:                        
             products = Product.objects.order_by(sortBy).all()
         
         if products:
@@ -144,15 +135,13 @@ class ListRelatedView(APIView):
                             status = status.HTTP_404_NOT_FOUND)
         
         category = Product.objects.get(id=product_id).category
-        print(category)
         if Product.objects.filter(category=category).exists():
             if category.parent:
                 related_products = Product.objects.order_by(
                     '-sold'
                 ).filter(category=category)
             else:
-                if not Category.objects.filter(parent=category).exists():
-                    print('here')
+                if not Category.objects.filter(parent=category).exists():                    
                     related_products = related_products.order_by(
                         '-sold'
                     ).filter(category=category)
@@ -298,8 +287,7 @@ class ProductViewSet(viewsets.ViewSet):
     def product_filter(self, request):
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
-    def list(self, request): 
-        print('siuuu')       
+    def list(self, request):              
         products = self.model.objects.filter(active=True)
         if products:
             products = self.serializer_class(products, many=True)
@@ -319,8 +307,7 @@ class ProductViewSet(viewsets.ViewSet):
             return Response({'product':serializer_product.data}, status=status.HTTP_200_OK)
         return Response({'error':'No se ha encontrado el producto'}, status =status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk=None):        
-        print('Holitas de mar')
+    def delete(self, request, pk=None):                
         query = self.model.objects.filter(id=self.kwargs['pk'],active=True).first()
         if query:
             query.active=False

@@ -3,6 +3,8 @@ from unicodedata import decimal
 from django.db import models
 from apps.category.models import Category
 # Create your models here.
+from django.conf import settings
+domain = settings.DOMAIN
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -18,3 +20,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+    def get_thumbnail(self):
+        if self.image:
+            return self.image.url
+        return ''
