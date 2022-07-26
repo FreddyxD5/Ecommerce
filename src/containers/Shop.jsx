@@ -1,11 +1,14 @@
 import Layout from "../hocs/layout";
 import { Fragment, useEffect, useState } from 'react'
+import { Link } from "react-router-dom";
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 
 import { connect } from "react-redux"
 import { get_categories } from "../redux/actions/categories";
+import { get_products, get_filtered_products } from "../redux/actions/products";
+import ProductCart from "../components/product/ProductCart";
 
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
@@ -63,12 +66,84 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-const Shop = ({ get_categories, categories }) => {
+const Shop = ({
+    get_categories, categories,
+    get_products, products,
+    get_filtered_products, filtered_products
+}) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const [filtered, setFiltered] = useState(false)
+    const [formData, setFormData] = useState({
+        category_id:'0',
+        price_range:'Any',
+        sortBy:'created',
+        order:'desc'
+        
+    })
 
+    const {category_id, price_range, sortBy, order} = formData
+    
     useEffect(() => {
         get_categories();
+        get_products();
+        get_filtered_products();
+        window.scrollTo(0,0)
     }, [])
+
+    const onChange = e =>setFormData({...formData, [e.target.name]:e.target.value})
+
+    const onSubmit = e => {
+        e.preventDefault();
+        get_filtered_products(category_id, price_range, sortBy, order)
+        setFiltered(true)
+    }
+    
+    const showProducts = () => {
+        let results = []
+        let display = []
+        if (
+            filtered_products &&
+            filtered_products !==null &&
+            filtered_products !== undefined &&
+            filtered
+
+
+        ){
+            filtered_products.map((product, index)=>{
+                return display.push(
+                    <div key={index}>
+                        producto filtrado 
+                    </div>
+                )
+            })
+        }else if(
+            !filtered &&
+            products &&
+            products !==null&&
+            products !== undefined
+        ){
+            products.map((product, index)=>{
+                return display.push(
+                    <div key={index}>
+                        products
+                    </div>
+                )
+            })
+        }
+
+        for (let i=0; i<display.length; i+=3){
+            results.push(
+                <div key={i} className='grid md:grid-cols-3'>
+                    {display[i] ? display[i] :<div className=""></div>}
+                    {display[i+1] ? display[i+1] :<div className=""></div>}
+                    {display[i+2] ? display[i+2] :<div className=""></div>}
+                </div>
+            )
+        }
+
+        return results
+    }
+
 
     return (
         <Layout>
@@ -290,67 +365,67 @@ const Shop = ({ get_categories, categories }) => {
 
                             <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
                                 {/* Filters */}
-                                <form className="hidden lg:block">
+                                <form className="hidden lg:block" onChange={onChange}>
                                     <h3 className="sr-only">Categories</h3>
                                     <ul role="list" className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                                    {
-                                                categories &&
-                                                categories !== null &&
-                                                categories !== undefined &&
-                                                categories.map(category => {
-                                                    if (category.sub_categories.length === 0) {
-                                                        return (
-                                                            <div key={category.id} className="flex items-center h-5 ml-2 my-5">
-                                                                <input
-                                                                    name='category_id'
-                                                                    type='radio'
-                                                                    className="focus:ring-blue-500 h-4 w-4 text-blue-600"
-                                                                />
-                                                                <label className="ml-3 min-w-0 flex-1 text-gray-500">
-                                                                    {category.name}
-                                                                </label>
+                                        {
+                                            categories &&
+                                            categories !== null &&
+                                            categories !== undefined &&
+                                            categories.map(category => {
+                                                if (category.sub_categories.length === 0) {
+                                                    return (
+                                                        <div key={category.id} className="flex items-center h-5 ml-2 my-5">
+                                                            <input
+                                                                name='category_id'
+                                                                type='radio'
+                                                                className="focus:ring-blue-500 h-4 w-4 text-blue-600"
+                                                            />
+                                                            <label className="ml-3 min-w-0 flex-1 text-gray-500">
+                                                                {category.name}
+                                                            </label>
 
-                                                            </div>
-                                                        )
-                                                    } else {
-                                                        let result = []
+                                                        </div>
+                                                    )
+                                                } else {
+                                                    let result = []
+                                                    result.push(
+                                                        <div key={category.id} className="flex items-center h-5 ml-2 my-5">
+                                                            <input
+                                                                name='category_id'
+                                                                type='radio'
+                                                                className="focus:ring-blue-500 h-4 w-4 text-blue-600"
+                                                            />
+                                                            <label className="ml-3 min-w-0 flex-1 text-gray-500">
+                                                                {category.name}
+                                                            </label>
+                                                        </div>
+                                                    )
+
+                                                    category.sub_categories.map(sub_category => {
                                                         result.push(
-                                                            <div key={category.id} className="flex items-center h-5 ml-2 my-5">
+                                                            <div key={sub_category.id} className="flex items-center h-5 ml-2 my-5">
                                                                 <input
                                                                     name='category_id'
                                                                     type='radio'
                                                                     className="focus:ring-blue-500 h-4 w-4 text-blue-600"
                                                                 />
                                                                 <label className="ml-3 min-w-0 flex-1 text-gray-500">
-                                                                    {category.name}
+                                                                    {sub_category.name}
                                                                 </label>
+
                                                             </div>
                                                         )
+                                                    })
 
-                                                        category.sub_categories.map(sub_category => {
-                                                            result.push(
-                                                                <div key={sub_category.id} className="flex items-center h-5 ml-2 my-5">
-                                                                    <input
-                                                                        name='category_id'
-                                                                        type='radio'
-                                                                        className="focus:ring-blue-500 h-4 w-4 text-blue-600"
-                                                                    />
-                                                                    <label className="ml-3 min-w-0 flex-1 text-gray-500">
-                                                                        {sub_category.name}
-                                                                    </label>
+                                                    return result
+                                                }
+                                            })
 
-                                                                </div>
-                                                            )
-                                                        })
-
-                                                        return result
-                                                    }
-                                                })
-
-                                            }
+                                        }
                                     </ul>
 
-                                    {filters.map((section) => (
+                                    {/* {filters.map((section) => (
                                         <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
                                             {({ open }) => (
                                                 <>
@@ -391,13 +466,47 @@ const Shop = ({ get_categories, categories }) => {
                                                 </>
                                             )}
                                         </Disclosure>
-                                    ))}
+                                    ))} */}
                                 </form>
 
                                 {/* Product grid */}
                                 <div className="lg:col-span-3">
                                     {/* Replace with your content */}
-                                    <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" />
+                                    <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" >
+                                        <div className="bg-white">
+                                            <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+                                                <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Lo mas reciente</h2>
+
+                                                <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                                                    {products &&
+                                                        products !== null &&
+                                                        products !== undefined &&
+                                                        products.map((product) => (
+                                                            <div key={product.id} className="group relative">
+                                                                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                                                                    <img
+                                                                        src={product.image}
+                                                                        alt={product.image}
+                                                                        className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                                                                    />
+                                                                </div>
+                                                                <div className="mt-4 flex justify-between">
+                                                                    <div>
+                                                                        <h3 className="text-sm text-gray-700">
+                                                                            <Link to={`product/${product.id}`}>
+                                                                                <span aria-hidden="true" className="absolute inset-0">{product.name}</span>
+                                                                            </Link>
+                                                                        </h3>
+
+                                                                    </div>
+                                                                    <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     {/* /End replace */}
                                 </div>
                             </div>
@@ -409,9 +518,13 @@ const Shop = ({ get_categories, categories }) => {
     )
 }
 const mapStateToProps = state => ({
-    categories: state.Categories.categories
+    categories: state.Categories.categories,
+    products: state.Products.products,
+    filtered_products: state.Products.filtered_products
 })
 
 export default connect(mapStateToProps, {
     get_categories,
+    get_products,
+    get_filtered_products
 })(Shop);

@@ -1,6 +1,6 @@
 import Alert from '../Alert'
 import { connect } from "react-redux"
-import { Fragment,useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { Link, Navigate } from "react-router-dom"
 
@@ -89,20 +89,27 @@ function classNames(...classes) {
 }
 
 function Navbar({ isAuthenticated, user, logout }) {
-  const [redirect, setRedirect] = useState(false)
-  
-  const logoutHandler = ()=>{
-    logout();    
-    setRedirect(true)
+
+  const [redirect, setRedirect] = useState(false);
+
+  // useEffect(()=>{
+
+  // },[])
+
+  const logoutHandler = () => {
+    logout()
+    console.log('se Ejecuto')
+    setRedirect(true);
   }
-  
-  if(redirect){
-    return <Navigate to="/"></Navigate>
+
+  if (redirect) {
+    window.location.reload(false)
+    return <Navigate to='/' />
   }
   const authLinks = (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex justify-center w-full rounded-full shadow-sm bg-white text-sm font-medium text-gray-700  focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">          
+        <Menu.Button className="inline-flex justify-center w-full rounded-full shadow-sm bg-white text-sm font-medium text-gray-700  focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
           <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
             <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -520,7 +527,7 @@ function Navbar({ isAuthenticated, user, logout }) {
 const mapStateProps = state => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user
-  
+
 })
 
 export default connect(mapStateProps, {

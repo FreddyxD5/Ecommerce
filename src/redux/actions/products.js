@@ -25,8 +25,7 @@ export const get_products = () => async dispatch =>{
     }
 
     try{
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/get-products/`, config)
-
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/get-products`, config)        
         if (res.status===200){
             dispatch({
                 type:GET_PRODUCTS_SUCCESS,
@@ -38,7 +37,9 @@ export const get_products = () => async dispatch =>{
             })
         }
     }catch(err){
-
+        dispatch({
+            type:GET_PRODUCTS_FAIL
+        })
     }    
 }
 export const get_products_by_arrival = () => async dispatch => {
@@ -97,7 +98,7 @@ export const get_products_by_sold = () => async dispatch => {
     
 }
 
-export const get_product = (productId)=> async dispatch =>{
+export const get_product = (productId) => async dispatch =>{
     const config = {
         headers:{
             'Content-Type':'application/json'
@@ -107,11 +108,11 @@ export const get_product = (productId)=> async dispatch =>{
 
     }
     try{
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/detail/${productId}`, config)
-        if(res.status==200){
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/detail/${productId}`, config)        
+        if(res.status===200){            
             dispatch({
                 type:GET_PRODUCT_SUCCESS,
-                payload:res.data
+                payload:res.data                
             })
         }else{
             dispatch({

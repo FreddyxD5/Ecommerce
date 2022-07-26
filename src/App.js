@@ -32,7 +32,7 @@ function App() {
           <Route exact path="/password/reset/confirm/:uid/:token" element={<PasswordConfirm/>} />
           {/* Shop */}
           <Route exact path="/shop" element={<Shop/>} />
-          <Route exact path="/product/detail/:id" element={<ProductDetail></ProductDetail>}></Route>
+          <Route exact path="/product/:productId" element={<ProductDetail/>}></Route>
         </Routes>
       </Router>
     </Provider>

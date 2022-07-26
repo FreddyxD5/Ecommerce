@@ -61,7 +61,7 @@ export default function Products(state=initialState, action){
                 ...state,
                 products:null
             }
-        case GET_PRODUCT_SUCCESS:
+        case GET_PRODUCT_SUCCESS:            
             return {
                 ...state,
                 product:payload.product
@@ -71,7 +71,7 @@ export default function Products(state=initialState, action){
                 ...state,
                 product:null
             }
-        case RELATED_PRODUCTS_SUCCESS:
+        case RELATED_PRODUCTS_SUCCESS:            
             return {
                 ...state,
                 related_products:payload.related_products
@@ -80,7 +80,6 @@ export default function Products(state=initialState, action){
             return{
                 ...state,
                 related_products:null
-
             }
         case FILTER_PRODUCTS_SUCCESS:
             return {
