@@ -1,14 +1,16 @@
-import Layout from "../hocs/layout";
+import Layout from "../../hocs/layout";
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { FilterIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid'
 
 import { connect } from "react-redux"
-import { get_categories } from "../redux/actions/categories";
-import { get_products, get_filtered_products } from "../redux/actions/products";
-import ProductCart from "../components/product/ProductCart";
-import { prices } from "../helpers/fixedPrices";
+import { get_categories } from "../../redux/actions/categories";
+import { get_products, get_filtered_products, } from "../../redux/actions/products";
+import ProductCart from "../../components/product/ProductCart";
+import { prices } from "../../helpers/fixedPrices";
+import Footer from "../../components/navigation/Footer";
+import Navbar from "../../components/navigation/Navbar";
 
 
 
@@ -16,13 +18,15 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-const Shop = ({
+const Search = ({
     get_categories, categories,
     get_products, products,
-    get_filtered_products, filtered_products
+    get_filtered_products, filtered_products,
+    search_products
 }) => {
-    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)    
     const [filtered, setFiltered] = useState(false)
+    const [productCounter, setProductCounter] = useState(0)
     const [formData, setFormData] = useState({
         category_id: '0',
         price_range: 'Any',
@@ -34,8 +38,7 @@ const Shop = ({
     const { category_id, price_range, sortBy, order } = formData    
 
     useEffect(() => {
-        get_categories();
-        get_products();
+        get_categories();        
         get_filtered_products();
         window.scrollTo(0, 0)
     }, [])
@@ -57,8 +60,6 @@ const Shop = ({
             filtered_products !== null &&
             filtered_products !== undefined &&
             filtered
-
-
         ) {
             filtered_products.map((product, index) => {
                 return display.push(
@@ -67,13 +68,28 @@ const Shop = ({
                     </div>
                 )
             })
-        } else if (
-            !filtered &&
-            products &&
-            products !== null &&
-            products !== undefined
+        }
+        else if (
+            search_products &&
+            search_products !== null &&
+            search_products !== undefined          
+
+
         ) {
-            products.map((product, index) => {
+            search_products.map((product, index) => {
+                return display.push(
+                    <div key={index}>
+                        <ProductCart product={product} />                    
+                    </div>
+                )
+            })
+        } else if (
+            !search_products &&
+            search_products &&
+            search_products !== null &&
+            search_products !== undefined
+        ) {
+            search_products.map((product, index) => {
                 return display.push(
                     <div key={index}>
                         <ProductCart product={product} />
@@ -96,8 +112,9 @@ const Shop = ({
     }
 
 
-    return (
-        <Layout>
+    return (        
+        <div>
+            <Navbar />
             <div className="bg-white">
                 <div>
                     {/* Mobile filter dialog */}
@@ -148,7 +165,7 @@ const Shop = ({
                                                 categories.map(category => {
                                                     if (category.sub_categories.length === 0) {
                                                         return (
-                                                            <div key={category.id} className="flex items-center h-5 my-5">
+                                                            <div key={category.id} className="flex items-center h-5 ml-2 my-5">
                                                                 <input
                                                                     name='category_id'
                                                                     type='radio'
@@ -187,7 +204,7 @@ const Shop = ({
                                                                         type='radio'
                                                                         onChange={e => onChange(e)}
                                                                         value={sub_category.id.toString()}
-                                                                        className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded-full"
+                                                                        className="focus:ring-blue-500 h-4 w-4 text-blue-600"
                                                                     />                                                                    
                                                                     <label className="ml-3 min-w-0 flex-1 text-gray-500">
                                                                         {sub_category.name}
@@ -327,7 +344,12 @@ const Shop = ({
 
                     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
-                            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Productos</h1>
+                            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">Productos encontrados :({
+                                search_products &&
+                                search_products !== null &&
+                                search_products !== undefined &&
+                                search_products.length
+                            }) </h1>
 
                             <div className="flex items-center">
                                 
@@ -359,11 +381,13 @@ const Shop = ({
                                             categories.map(category => {
                                                 if (category.sub_categories.length === 0) {
                                                     return (
-                                                        <div key={category.id} className="flex items-center h-5 my-5">
+                                                        <div key={category.id} className="flex items-center h-5 ml-2 my-5">
                                                             <input
                                                                 name='category_id'
                                                                 type='radio'
                                                                 className="focus:ring-blue-500 h-4 w-4 text-blue-600"
+                                                                onChange={e=>onChange(e)}
+                                                                value={category.id.toString()}
                                                             />                                                            
                                                             <label className="ml-3 min-w-0 flex-1 text-gray-500">
                                                                 {category.name}
@@ -374,11 +398,13 @@ const Shop = ({
                                                 } else {
                                                     let result = []
                                                     result.push(
-                                                        <div key={category.id} className="flex items-center h-5">
+                                                        <div key={category.id} className="flex items-center h-5 my-5">
                                                             <input
                                                                 name='category_id'
                                                                 type='radio'
                                                                 className="focus:ring-blue-500 h-4 w-4 text-blue-600"
+                                                                onChange={e=>onChange(e)}
+                                                                value={category.id.toString()}
                                                             />                                                          
                                                             <label className="ml-3 min-w-0 flex-1 text-gray-500">
                                                                 {category.name}
@@ -393,6 +419,8 @@ const Shop = ({
                                                                     name='category_id'
                                                                     type='radio'
                                                                     className="focus:ring-blue-500 h-4 w-4 text-blue-600"
+                                                                    onChange={e=>onChange(e)}
+                                                                    value={sub_category.id.toString()}
                                                                 />                                                                
                                                                 <label className="ml-3 min-w-0 flex-1 text-gray-500">
                                                                     {sub_category.name}
@@ -534,7 +562,7 @@ const Shop = ({
                                         <div className="bg-white">
                                             <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">                                                
 
-                                                {products && showProducts()}
+                                                {search_products && showProducts()}
 
                                             </div>
                                         </div>
@@ -546,12 +574,13 @@ const Shop = ({
                     </main>
                 </div>
             </div>
-        </Layout>
+            <Footer />
+        </div>        
     )
 }
 const mapStateToProps = state => ({
-    categories: state.Categories.categories,
-    products: state.Products.products,
+    categories: state.Categories.categories,    
+    search_products: state.Products.search_products,
     filtered_products: state.Products.filtered_products
 })
 
@@ -559,4 +588,5 @@ export default connect(mapStateToProps, {
     get_categories,
     get_products,
     get_filtered_products
-})(Shop);
+})(Search);
+

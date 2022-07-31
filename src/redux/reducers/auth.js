@@ -72,7 +72,7 @@ export default function Auth(state = initialState, action){
             return{
                 ...state,
                 isAuthenticated:true,
-                access:localStorage.getItem('access'),
+                access: localStorage.getItem('access'),
                 refresh: localStorage.getItem('refresh')
             }        
         case ACTIVATION_SUCCESS:
@@ -85,12 +85,10 @@ export default function Auth(state = initialState, action){
                 ...state
             }
         case REFRESH_SUCCESS:
-            localStorage.setItem('access', payload.access)
-            localStorage.setItem('refresh', payload.refresh)
+            localStorage.setItem('access', payload.access)            
             return {
                 ...state,
-                access:localStorage.getItem('access'),
-                refresh:localStorage.getItem('refresh')           
+                access:localStorage.getItem('access')                           
             }
         case SIGNUP_SUCCESS:
         case SIGNUP_FAIL:

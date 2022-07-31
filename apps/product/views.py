@@ -76,8 +76,7 @@ class ListSearchView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        data = self.request.data
-
+        data = request.data        
         try:
             category_id = int(data['category_id'])
         except:
@@ -117,7 +116,7 @@ class ListSearchView(APIView):
                 
                 filtered_categories = search_results.order_by('-date_created').filter(category__in=filtered_categories)                
         
-        search_results = ProductSerializer(search_results, many=True)        
+        search_results = ProductSerializer(search_results, many=True)          
         return Response({'search_products':search_results.data}, status=status.HTTP_200_OK)
 
 
@@ -177,11 +176,11 @@ class ListRelatedView(APIView):
 
 
 
-class ListBySearchView(APIView):
-    permssion_classes = [AllowAny]
+class ListBySearchView(APIView):    
+    permission_classes  = [AllowAny]
 
-    def post(self, request, format=None):
-        data = self.request.data        
+    def post(self, request, format=None):        
+        data = request.data                
         try:
             category_id = int(data['category_id'])
         except:
@@ -206,7 +205,7 @@ class ListBySearchView(APIView):
 
             if category.parent:
                 #Si la categoria tiene un padre, filtrar por la categoria más no por el padre
-                product_results = Product.objects.filter(category=category)
+                product_results = Product.objects.filter(category=category)                
             else:
                 if not Category.objects.filter(parent = category).exists():
                     product_results = Product.objects.filter(category=category)
@@ -240,7 +239,7 @@ class ListBySearchView(APIView):
         
         #Filtrar producto por sortBy
 
-        if order=='des':
+        if order=='desc':
             sort_by = '-'+sort_by
             product_results = product_results.order_by(sort_by)
         elif order=='asc':

@@ -258,15 +258,12 @@ export const refresh = () => async dispatch=>{
 
         const body = JSON.stringify({
             'refresh':localStorage.getItem('refresh')
-        })
-        console.log('refresh actual')
-        console.log(localStorage.getItem('refresh'))
+        })        
         
                     
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/jwt/refresh/`, body, config)
 
-        try{
-            console.log('Hizo la peticion')            
+        try{                  
             if (res.status===200){                
                 dispatch({
                     type:REFRESH_SUCCESS,
@@ -354,8 +351,7 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
         token,
         new_password,
         re_new_password
-    });
-    console.log('WHAT')
+    });    
     if (new_password !== re_new_password){
         dispatch({
             type:RESET_PASSWORD_CONFIRM_FAIL
@@ -363,8 +359,7 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
         dispatch({
             type:REMOVE_AUTH_LOADING
         })        
-    }else{
-        console.log('here come')
+    }else{        
         try{
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/reset_password_confirm/`, body, config)
             if (res.status ===204){

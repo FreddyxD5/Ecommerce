@@ -103,10 +103,7 @@ export const get_product = (productId) => async dispatch =>{
         headers:{
             'Content-Type':'application/json'
         }
-    }
-    const body={
-
-    }
+    }    
     try{
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/detail/${productId}`, config)        
         if(res.status===200){            
@@ -159,21 +156,21 @@ export const get_filtered_products = (category_id, price_range, sort_by, order) 
     const config = {
         headers:{
             'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',            
         }
     }
-    const body = {
+    const body = JSON.stringify({
         category_id,
         price_range,
         sort_by,
         order
-    }
+    })
     try{
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/by/search`, body, config)
         if (res.status===200){
             dispatch({
                 type:FILTER_PRODUCTS_SUCCESS,
-                payload:res
+                payload:res.data
             })
         }else{
             dispatch({
@@ -192,13 +189,14 @@ export const get_search_products = (category_id, search) => async dispatch =>{
     const config = {
         headers:{
             'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     }
-    const body = {
+    const body = JSON.stringify({
         category_id,
         search
-    }
+    })
 
     try{
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/search`, body, config)
