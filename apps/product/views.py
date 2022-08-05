@@ -256,16 +256,6 @@ class ListBySearchView(APIView):
             return Response({'error':'No products found'}, status.HTTP_200_OK)
 
 
-
-
-
-
-
-                    
-                    
-
-            
-
 class ProductViewSet(viewsets.ViewSet):    
     model = Product
     serializer_class = ProductSerializer

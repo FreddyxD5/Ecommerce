@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { NavLink, Link, Navigate } from "react-router-dom"
 
-
+import {ShoppingCartIcon} from "@heroicons/react/solid"
 import {
   ChartBarIcon,
   CursorClickIcon,
@@ -52,37 +52,37 @@ function Navbar({
   logout, get_categories,
   categories, get_search_products }) {
 
-  const [redirect, setRedirect] = useState(false);  
+  const [redirect, setRedirect] = useState(false);
   const [render, setRender] = useState(false)
 
   const [formData, setFormData] = useState({
-    'category_id':0,
-    'search':''
+    'category_id': 0,
+    'search': ''
   });
-      
+
 
   const { category_id, search } = formData;
 
-  useEffect(()=>{
+  useEffect(() => {
     get_categories();
-  },[])
+  }, [])
 
-  
-  const onChange = e =>setFormData({...formData, [e.target.name]:e.target.value});
 
-  const onSubmit = e =>{
-    e.preventDefault();    
-    get_search_products(category_id, search)    
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = e => {
+    e.preventDefault();
+    get_search_products(category_id, search)
     setRender(!render);
-  }  
+  }
 
-  if (render){
+  if (render) {
     console.log(category_id, search)
     return <Navigate to='/search' replace={true} />;
   }
 
   const logoutHandler = () => {
-    logout()    
+    logout()
     setRedirect(true);
   }
 
@@ -206,29 +206,38 @@ function Navbar({
               </Link>
             </div>
             <div className="-mr-2 -my-2 md:hidden">
+              <Link to="/cart" className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <span className="sr-only">Open menu</span>
+                <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+              </Link>
               <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                 <span className="sr-only">Open menu</span>
                 <MenuIcon className="h-6 w-6" aria-hidden="true" />
               </Popover.Button>
             </div>
             <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
-              <Popover.Group as="nav" className="flex space-x-10">               
-                <NavLink to="/shop" 
-                className="text-base font-medium py-2 text-gray-500 hover:text-gray-900"
+              <Popover.Group as="nav" className="flex space-x-10">
+                <NavLink to="/shop"
+                  className="text-base font-medium py-2 text-gray-500 hover:text-gray-900"
                 >
                   Store
                 </NavLink>
-                {window.location.pathname==='/search'? <></>:
-                <SearchBox 
-                search={search}
-                onChange={e=>onChange(e)}
-                onSubmit={e=>onSubmit(e)}
-                categories={categories}
-                />
+                {window.location.pathname === '/search' ? <></> :
+                  <SearchBox
+                    search={search}
+                    onChange={e => onChange(e)}
+                    onSubmit={e => onSubmit(e)}
+                    categories={categories}
+                  />
                 }
-                
+
               </Popover.Group>
-              <div className="flex items-center md:ml-12">
+              <div className="flex items-center md:ml-12">                
+                  <Link to="/cart">
+                    <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">      
+                      <ShoppingCartIcon className='h-6 w-6 text-gray-300 mr-4 cursor-pointer justify-center'/>
+                    </span>                    
+                  </Link>                
                 {isAuthenticated ? authLinks : guestLinks}
               </div>
             </div>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 /* This example requires Tailwind CSS v2.0+ */
 export default function Example() {
     return (
@@ -6,11 +7,10 @@ export default function Example() {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:static">
             <div className="sm:max-w-lg">
               <h1 className="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-                Summer styles are finally here
+                Los estilos de verano ya estan aqui!
               </h1>
               <p className="mt-4 text-xl text-gray-500">
-                This year, our new summer collection will shelter you from the harsh elements of a world that doesn't care
-                if you live or die.
+              Este año, nuestra nueva colección de verano te protegerá de los duros elementos de un mundo al que no le importa si vives o mueres.
               </p>
             </div>
             <div>
@@ -81,12 +81,12 @@ export default function Example() {
                   </div>
                 </div>
   
-                <a
-                  href="#"
+                <Link
+                  to="/shop"
                   className="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
                 >
-                  Shop Collection
-                </a>
+                  Ver nuestras prendas
+                </Link>
               </div>
             </div>
           </div>
