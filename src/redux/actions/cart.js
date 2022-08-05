@@ -24,6 +24,9 @@ import {
     SYNC_CART_SUCCESS,
     SYNC_CART_FAIL,
 } from "./types"
+
+import { setAlert } from './alert';
+
 import { config_auth } from "../../helpers/utils";
 
 export const add_item = product => async dispatch => {
@@ -40,23 +43,30 @@ export const add_item = product => async dispatch => {
         const body = JSON.stringify({ product_id })
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/cart/add-item`, body, config);
-
+            console.log('uh?')
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/cart/add-item`, body, config);            
+            console.log(res.data)
             if (res.status === 201) {
                 dispatch({
                     type: ADD_ITEM_SUCCESS,
                     payload: res.data
                 })
-            } else {
+            }            
+
+        } catch (err) {
+            if(err.response.status === 409){
                 dispatch({
                     type: ADD_ITEM_FAIL
                 })
+                dispatch(setAlert('El producto ya esta en su carrito'))
             }
-
-        } catch (err) {
-            dispatch({
-                type: ADD_ITEM_FAIL
-            })
+            else{
+                dispatch({
+                    type: ADD_ITEM_FAIL
+                })
+                dispatch(setAlert('Hay problemas en el servidor, por favor intente más tarde.'))
+            }
+            
         }
     } else {
         let cart = []

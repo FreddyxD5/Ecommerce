@@ -363,6 +363,8 @@ const Shop = ({
                                                             <input
                                                                 name='category_id'
                                                                 type='radio'
+                                                                onChange={e => onChange(e)}
+                                                                value={category.id.toString()}
                                                                 className="focus:ring-blue-500 h-4 w-4 text-blue-600"
                                                             />                                                            
                                                             <label className="ml-3 min-w-0 flex-1 text-gray-500">
@@ -378,6 +380,8 @@ const Shop = ({
                                                             <input
                                                                 name='category_id'
                                                                 type='radio'
+                                                                onChange={e => onChange(e)}
+                                                                value={category.id.toString()}
                                                                 className="focus:ring-blue-500 h-4 w-4 text-blue-600"
                                                             />                                                          
                                                             <label className="ml-3 min-w-0 flex-1 text-gray-500">
@@ -392,6 +396,8 @@ const Shop = ({
                                                                 <input
                                                                     name='category_id'
                                                                     type='radio'
+                                                                    onChange={e => onChange(e)}
+                                                                    value={sub_category.id.toString()}                                                                    
                                                                     className="focus:ring-blue-500 h-4 w-4 text-blue-600"
                                                                 />                                                                
                                                                 <label className="ml-3 min-w-0 flex-1 text-gray-500">

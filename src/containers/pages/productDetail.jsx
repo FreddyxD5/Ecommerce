@@ -19,12 +19,16 @@ const ProductDetail = ({
     get_product,
     get_related_products,
     product,
+    cart,
     get_items,
     add_item,
     get_total,
     get_item_total,
 }) => {
-    const [loading, setLoading]= useState(false)
+    const [loading, setLoading] = useState(false)
+    let inBag = false
+    
+
     const navigate = useNavigate()
 
     const addToCart = async () =>{
@@ -40,6 +44,7 @@ const ProductDetail = ({
     }
 
     
+    
     const params = useParams()
     const productId = params.productId
 
@@ -48,8 +53,16 @@ const ProductDetail = ({
         window.scrollTo(0,0)
         get_product(productId);
         get_related_products(productId);
+        get_items()                                
     }, [])
-
+    
+    if (cart && cart!== undefined && cart!== null){
+        cart.map(products=>{
+            if (products.product.id === product.id){ 
+                inBag = true
+            }
+        })
+    }
     return (
         <Layout>
             <div className="bg-white">
@@ -135,12 +148,12 @@ const ProductDetail = ({
                                 </p>
 
                                 <div className="mt-6 flex sm:flex-col1">
-                                    {loading?
+                                    {inBag ?
                                         <button                                        
                                         type="submit"
                                         className="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
                                     >
-                                     <Oval color="#fff" width={20} height={20} />
+                                     Este producto ya esta en su carrito
                                     </button>:
                                     <button
                                     onClick={addToCart}
@@ -174,7 +187,8 @@ const ProductDetail = ({
 }
 
 const mapStateToProps = state => ({
-    product: state.Products.product
+    product: state.Products.product,
+    cart: state.Cart.items
 })
 
 export default connect(mapStateToProps, {

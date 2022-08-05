@@ -75,7 +75,7 @@ class ProductListView(APIView):
 class ListSearchView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request, format=None):
+    def post(self, request, format=None):        
         data = request.data        
         try:
             category_id = int(data['category_id'])
@@ -134,6 +134,7 @@ class ListRelatedView(APIView):
                             status = status.HTTP_404_NOT_FOUND)
         
         category = Product.objects.get(id=product_id).category
+
         if Product.objects.filter(category=category).exists():
             if category.parent:
                 related_products = Product.objects.order_by(
@@ -141,7 +142,7 @@ class ListRelatedView(APIView):
                 ).filter(category=category)
             else:
                 if not Category.objects.filter(parent=category).exists():                    
-                    related_products = related_products.order_by(
+                    related_products = Product.objects.order_by(
                         '-sold'
                     ).filter(category=category)
                     
@@ -179,7 +180,7 @@ class ListRelatedView(APIView):
 class ListBySearchView(APIView):    
     permission_classes  = [AllowAny]
 
-    def post(self, request, format=None):        
+    def post(self, request, format=None):                
         data = request.data                
         try:
             category_id = int(data['category_id'])

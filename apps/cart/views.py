@@ -39,7 +39,7 @@ class GetItemsView(APIView):
 
 
 class AddItemView(APIView):
-    def post(self, request, format=None):
+    def post(self, request, format=None):        
         user = self.request.user
         data = self.request.data
 
@@ -55,9 +55,8 @@ class AddItemView(APIView):
 
             product = Product.objects.get(id=product_id)
 
-            cart = Cart.objects.get(user=user)
-
-            if CartItem.objects.filter(cart=cart, product=product).exists():
+            cart = Cart.objects.get(user=user)            
+            if CartItem.objects.filter(cart=cart, product=product).exists():                
                 return Response({'error': 'Item is already in cart'}, status=status.HTTP_409_CONFLICT)
             
             if int(product.quantity) > 0:
