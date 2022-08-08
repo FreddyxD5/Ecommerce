@@ -4,9 +4,10 @@ import {login} from '../../redux/actions/auth'
 import {connect} from 'react-redux'
 import{ Oval }  from "react-loader-spinner"
 import { Link, Navigate } from "react-router-dom";
+import { get_items } from "../../redux/actions/cart";
 
 
-export const Login = ({login,loading})=>{
+export const Login = ({login,loading,get_items})=>{
     const [loginSuccess, setLoginSucess] = useState(false)
     useEffect(()=>{
         window.scrollTo(0,0)
@@ -32,6 +33,7 @@ export const Login = ({login,loading})=>{
     }
 
     if (loginSuccess && !loading){
+      get_items()
       return <Navigate to="/" />
     } 
 
@@ -142,5 +144,6 @@ const mapStateToProps = state =>({
 })
 
 export default connect(mapStateToProps,{
-  login
+  login,
+  get_items
 })(Login)

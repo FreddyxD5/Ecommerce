@@ -223,7 +223,7 @@ export const update_item = (item, count)=> async dispatch =>{
         })
         try{
             const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/cart/update-item`, body, config_auth)
-            if (res.status===200 && !res.data.error){
+            if (res.status ===200 && !res.data.error){
                 dispatch({
                     type:UPDATE_ITEM_SUCCESS,
                     payload:res.data
@@ -276,7 +276,7 @@ export const remove_item = item => async dispatch=>{
 
         try{
             const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/cart/remove-item`,config)
-            if (res.status ===200){
+            if (res.status === 200){
                 dispatch({
                     type:REMOVE_ITEM_SUCCESS,
                     payload:res.data

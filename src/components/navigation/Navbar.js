@@ -50,7 +50,8 @@ function classNames(...classes) {
 function Navbar({
   isAuthenticated, user,
   logout, get_categories,
-  categories, get_search_products }) {
+  categories, get_search_products,
+  total_items }) {
 
   const [redirect, setRedirect] = useState(false);
   const [render, setRender] = useState(false)
@@ -76,8 +77,7 @@ function Navbar({
     setRender(!render);
   }
 
-  if (render) {
-    console.log(category_id, search)
+  if (render) {    
     return <Navigate to='/search' replace={true} />;
   }
 
@@ -234,8 +234,9 @@ function Navbar({
               </Popover.Group>
               <div className="flex items-center md:ml-12">                
                   <Link to="/cart">
-                    <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">      
-                      <ShoppingCartIcon className='h-6 w-6 text-gray-300 mr-4 cursor-pointer justify-center'/>
+                  <ShoppingCartIcon className='h-8 w-8 text-gray-300 mr-4 cursor-pointer justify-center'/>
+                    <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white  font-semibold rounded-full px-2 text-center">
+                      {total_items}
                     </span>                    
                   </Link>                
                 {isAuthenticated ? authLinks : guestLinks}
@@ -351,7 +352,8 @@ function Navbar({
 const mapStateProps = state => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
-  categories: state.Categories.categories
+  categories: state.Categories.categories,
+  total_items : state.Cart.total_items
 
 })
 
