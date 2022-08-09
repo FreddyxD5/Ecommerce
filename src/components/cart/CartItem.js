@@ -119,10 +119,7 @@ const CartItem = ({
                     </div>
 
                     <div className="mt-4 sm:mt-0 sm:pr-9">
-                        <form onSubmit={e=>onSubmit(e)}>
-                            <label htmlFor={'item_count'} className="sr-only">
-                                Quantity, {item.product.name}
-                            </label>
+                        <form onSubmit={e=>onSubmit(e)}>                            
                             <select
                                 id={'item_count'}
                                 name={e => onChange(e)}
