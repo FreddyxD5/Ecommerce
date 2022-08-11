@@ -92,8 +92,7 @@ export default function Auth(state = initialState, action){
             }
         case SIGNUP_SUCCESS:
         case SIGNUP_FAIL:
-        case LOGIN_FAIL:
-        case REFRESH_FAIL:
+        case LOGIN_FAIL:        
         case LOGOUT:
             localStorage.removeItem('access')
             localStorage.removeItem('refresh')

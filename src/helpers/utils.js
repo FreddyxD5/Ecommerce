@@ -1,7 +1,7 @@
-export const config_auth ={
+export const config_auth = {
     headers:{
         'Content-Type':'application/json',
         'Accept':'application/json',
-        'Authorization': `JWT ${localStorage.getItem('access')}`
+        'Authorization': `JWT ${localStorage.getItem('access')}`,
     }
 }

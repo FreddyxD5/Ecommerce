@@ -2,10 +2,9 @@ import {
     GET_SHIPPING_OPTION_SUCCESS,
     GET_SHIPPING_OPTION_FAIL
 } from "../actions/types";
-import { get_shipping_options } from "../actions/shipping";
 
 const initialState = {
-    shipping_options:null
+    shipping:null
 }
 
 export default function Shipping(state=initialState, action){
@@ -15,12 +14,12 @@ export default function Shipping(state=initialState, action){
         case GET_SHIPPING_OPTION_SUCCESS:
             return {
                 ...state,
-                shipping_options:payload.shipping_options             
+                shipping:payload.shipping_options         
             }
         case GET_SHIPPING_OPTION_FAIL:
             return {
                 ...state,
-                shipping_options:null
+                shipping:null
             }
         default:
             return state

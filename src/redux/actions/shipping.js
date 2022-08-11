@@ -5,16 +5,17 @@ import {
 import axios from "axios";
 
 export const get_shipping_options = () => async dispatch =>{
-    const headers = {
-        headers:{
-            'Content-Type':'application/json',
+    const config = {
+        headers:{            
             'Accept':'application/json'
         }
     }
-    try{
         
-        const res = await res.get(`${process.env.REACT_APP_API_URL}/shipping/get-shipping-options`, headers)
-        if (res.status === 200){
+    try{        
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/shipping/get-shipping-options`, config)
+
+        if (res.status === 200){           
+            console.log(res.data) 
             dispatch({
                 type:GET_SHIPPING_OPTION_SUCCESS,
                 payload:res.data

@@ -146,27 +146,27 @@ class GetItemTotalView(APIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class UpdateItemView(APIView):
+class UpdateItemView(APIView):    
     def put(self, request, format=None):
         user = self.request.user
-        data = self.request.data
-
+        data = self.request.data        
         try:
             product_id = int(data['product_id'])
 
-        except:
+        except:            
             return Response({'error': 'Something went wrong when adding this product'},
                             status=status.HTTP_404_NOT_FOUND)
 
         try:
             count = int(data['count'])
-        except:
+        except:            
             return Response({'error': 'Count value must be an integer'},
                             status=status.HTTP_404_NOT_FOUND)
 
         try:
+            print('try 2')
             if not Product.objects.filter(id=product_id).exists():
-                return Response({'error': 'This product doesnot exists'},
+                return Response({'error': 'This product doesn\'t exists'},
                                 status=status.HTTP_404_NOT_FOUND)
 
             product = Product.objects.get(id=product_id)
