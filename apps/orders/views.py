@@ -8,9 +8,8 @@ from apps.orders.api.serializers import ListOrderSerializer, ListOrderDetailSeri
 
 
 class ListOrdersView(APIView):
-    def get(self, request, format=None):
-        user = self.request.user
-
+    def get(self, request, format=None):        
+        user = self.request.user        
         try:
             orders = Order.objects.order_by('-date_issued').filter(user=user)            
             if orders:
@@ -25,11 +24,10 @@ class ListOrdersView(APIView):
 class ListOrderDetailView(APIView):
     def get(self, request, transaction_id,format=None):
         user = self.request.user
-
         try:
-            if Order.objects.filter(user=user, transaction_id= transaction_id).exists():
-                order = Order.objects.get(user=user, transaction_id= transaction_id)
-                order = ListOrderDetailSerializer(order)
+            if Order.objects.filter(user=user, transaction_id=transaction_id).exists():                  
+                order = Order.objects.filter(user=user, transaction_id= transaction_id).first()                
+                order = ListOrderDetailSerializer(order)                
                 return Response({
                     'order':order.data
                     }, status = status.HTTP_200_OK)
