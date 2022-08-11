@@ -51,39 +51,61 @@ const CartItem = ({
 
 }) => {
     
-    const [formData, setFormData] = useState({
-        item_count: 1
-    })
-
+    const [formData, setFormData] = useState({})
+    const  [updateCount, setUpdateCount] = useState(false)
     const { item_count } = formData;
 
     useEffect(() => {
         if (count) {
             setFormData({ ...formData, item_count: count })
+        }else{
+            setFormData({ ...formData, item_count: 1 })
         }
     }, [count])
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: [e.target.value] });
+    const onChange = e => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
+        setUpdateCount(!updateCount)
+    };
 
-    const onSubmit = e => {
-
-        e.preventDefault();
-
+    useEffect(()=>{
         const fetchData = async () => {
             try {
                 if (item.product.quantity >= item_count) {
                     await update_item(item, item_count)
                 } else {
+                    console.log('porque chotas te ejecutas xd?')
                     setAlert('Not enough in stock', 'red')
                 }
+                setRender(!render)
 
             } catch (err) {
 
             }
         }
 
-        fetchData();
-    }
+        fetchData();        
+    },[updateCount])
+
+    // const onSubmit = e => {
+
+    //     e.preventDefault();
+
+    //     const fetchData = async () => {
+    //         try {
+    //             if (item.product.quantity >= item_count) {
+    //                 await update_item(item, item_count)
+    //             } else {
+    //                 setAlert('Not enough in stock', 'red')
+    //             }
+
+    //         } catch (err) {
+
+    //         }
+    //     }
+
+    //     fetchData();
+    // }
 
     const removeItemHandler = async () =>{
         await remove_item(item);
@@ -119,13 +141,10 @@ const CartItem = ({
                     </div>
 
                     <div className="mt-4 sm:mt-0 sm:pr-9">
-                        <form onSubmit={e=>onSubmit(e)}>
-                            <label htmlFor={'item_count'} className="sr-only">
-                                Quantity, {item.product.name}
-                            </label>
+                        <form >                            
                             <select
-                                id={'item_count'}
-                                name={e => onChange(e)}
+                                name='item_count'
+                                onChange={(e) => onChange(e)}
                                 value={item_count}
                                 className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             >
@@ -138,10 +157,7 @@ const CartItem = ({
                                 <option>7</option>
                                 <option>8</option>
                                 <option>8</option>
-                            </select>
-                            <button type="submit" className="-m-2 p-2 inline-flex text-gray-400 hover:text-gray-500">
-                                <span className="mx-2">Update</span>                                                          
-                            </button>
+                            </select>                            
                         </form>
 
                         <div className="absolute top-0 right-0">
@@ -167,7 +183,7 @@ const CartItem = ({
                         ):
                         (  
                             <>
-                            <ClockIcon className="flex-shrink-0 h-5 w-5 text-gray-300" aria-hidden="true" />
+                            <ClockIcon className="flex-shrink-0 h-5 w-5 text-red-300" aria-hidden="true" />
                             <span className="red"> Out of stock</span>
                             </>
                         )

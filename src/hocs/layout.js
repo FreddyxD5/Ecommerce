@@ -20,9 +20,8 @@ const Layout = (props) =>{
         get_items,
         get_total,
         get_item_total } = props
-    useEffect(() => {        
-        refresh()
-        check_authenticated()
+    useEffect(() => {                        
+        check_authenticated()        
         load_user() 
         get_items()
         get_total()
@@ -39,10 +38,10 @@ const Layout = (props) =>{
     )
 }
 
-export default connect(null, {
-    refresh,
+export default connect(null, {    
     check_authenticated,
     load_user,
+    refresh,    
     get_items,
     get_total,
     get_item_total,

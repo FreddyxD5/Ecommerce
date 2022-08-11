@@ -42,8 +42,7 @@ export const add_item = product => async dispatch => {
         const product_id = product.id;
         const body = JSON.stringify({ product_id })
 
-        try {
-            console.log('uh?')
+        try {            
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/cart/add-item`, body, config);            
             console.log(res.data)
             if (res.status === 201) {
@@ -104,6 +103,11 @@ export const get_items = () => async dispatch => {
 
     if (localStorage.getItem('access')) {        
         try {
+            const config = {
+                headers:{
+
+                }
+            }
 
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/cart/cart-items`, config_auth)
 
@@ -203,8 +207,8 @@ export const get_item_total = () =>async dispatch =>{
     }else{
         let total = 0.0
 
-        if(localStorage.getItem('car')){
-            total = JSON.parse(localStorage.getItem('car')).length;
+        if(localStorage.getItem('cart')){
+            total = JSON.parse(localStorage.getItem('cart')).length;
         }
 
         dispatch({
@@ -234,6 +238,7 @@ export const update_item = (item, count)=> async dispatch =>{
                 })
             }
         }catch(err){
+            console.log('uh?')
             dispatch({
                 type:UPDATE_ITEM_FAIL
             })

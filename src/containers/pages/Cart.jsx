@@ -34,18 +34,18 @@ const Cart = ({
   useEffect(() => {
     get_items()
     get_total()
-    get_item_total()
+    get_item_total()    
   }, [render])
 
-  const showItems = () => {
+  const showItems = () => {   
     return (
       <div>
         <h4>Your cart has  {total_items}</h4>
         {
-          items &&
+          items &&          
           items !== null &&
           items !== undefined &&
-          items.length !== 0 &&
+          items.length !== 2 ?
           items.map((item, index) => {
             let count = item.count;
             return (
@@ -61,7 +61,8 @@ const Cart = ({
                 />
               </div>
             )
-          })
+          }):
+          <div> Tienes que loguearte para usar esta función.</div>
         }
 
       </div>
@@ -170,7 +171,7 @@ const mapStateToProps = state => ({
   items: state.Cart.items,
   amount: state.Cart.amount,
   compare_amount: state.Cart.compare_amount,
-  total_items: state.Cart.total_items
+  total_items: state.Cart.total_items,  
 })
 
 export default connect(mapStateToProps, {

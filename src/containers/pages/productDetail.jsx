@@ -39,7 +39,7 @@ const ProductDetail = ({
             await get_total();
             await get_item_total();
             setLoading(false)
-            navigate('/cart')
+            navigate('/cart')   
         }
     }
 
@@ -57,7 +57,7 @@ const ProductDetail = ({
     }, [])
     
     if (cart && cart!== undefined && cart!== null){
-        cart.map(products=>{
+        cart.map(products=>{            
             if (products.product.id === product.id){ 
                 inBag = true
             }
