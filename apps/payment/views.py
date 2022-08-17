@@ -42,35 +42,34 @@ class GenerateTokenView(APIView):
 
 class GetPaymentTotalView(APIView):
     def get(self, request, format=None):
-        user = self.request.user
-        
+        user = self.request.user        
         tax = 0.18
 
         shipping_id = request.query_params.get('shipping_id')
         shipping_id = str(shipping_id)
 
-        try:
-            cart = Cart.objects.get(user=user)
-            if not CartItem.objects.filter(user=user, cart=cart).exists():
+        try:            
+            cart = Cart.objects.get(user=user)            
+            if not CartItem.objects.filter(cart=cart).exists():
                 return Response({
-                    'error':'tJER'
+                    'error':'Something wrnt wrong'
                 }, status = status.HTTP_404_NOT_FOUND)
 
-            cart_items = CartItem.objects.filter(user=user, cart=cart)
+        
+            cart_items = CartItem.objects.filter(cart=cart)
 
-            for cart_item in cart_items:
+            
+            for cart_item in cart_items:            
                 if not Product.objects.filter(id=cart_item.product.id).exists():
                     return Response({
                         'error':'A product with ID provided doesn\'t exists'
-                    }, status = status.HTTP_404_NOT_FOUND)
-                if int(cart.item.count) > int(cart_item.product.quantity):
+                    }, status = status.HTTP_404_NOT_FOUND)                
+                if int(cart_item.count) > int(cart_item.product.quantity):
                     return Response({
                         'error':'Not enough items in stock'
                     }, status = status.HTTP_200_OK)
-
                 total_amount=0.0
-                total_compare_amount = 0.0
-
+                total_compare_amount = 0.0                
                 for cart_item in cart_items:
                     total_amount += (float(cart_item.product.price)*float(cart_item.count))
                     total_compare_amount += (float(cart_item.product.compare_price)*float(cart_item.count))

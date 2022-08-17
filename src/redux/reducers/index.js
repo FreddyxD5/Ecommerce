@@ -5,11 +5,15 @@ import Categories from "./categories";
 import Cart from "./cart";
 import Products from "./products";
 import Shipping from "./shipping";
+import Payment from "./payment";
+
+
 export default combineReducers({
     Auth,
     Alert,
     Categories,
     Products,
     Cart,
-    Shipping
+    Shipping,
+    Payment
 });

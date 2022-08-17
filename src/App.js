@@ -16,6 +16,7 @@ import ProductDetail from './containers/pages/productDetail';
 import Search from './containers/pages/Search';
 import Cart from './containers/pages/Cart';
 import Checkout from './containers/pages/Checkout';
+import ThankYou from './containers/pages/ThanYou';
 import PrivateRoute from './hocs/PrivateRoute';
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route exact path='/search' element={<Search />}></Route>
           <Route exact path='/cart' element={<Cart/> }></Route>
           <Route exact path='/checkout' element ={<Checkout />} />
+          <Route exact path='/thankyou' element ={<ThankYou />} />
         </Routes>
       </Router>
     </Provider>
