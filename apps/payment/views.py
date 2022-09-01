@@ -176,7 +176,7 @@ class ProcessPaymentView(APIView):
                 'options':{
                     'submit_for_settlement':True
                 }
-            })
+            }) 
         except:
             return Response({
 

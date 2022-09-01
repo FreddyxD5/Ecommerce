@@ -52,7 +52,7 @@ export const get_client_token = () => async dispatch => {
         }
     }
     try {
-        const res = axios.get(`${process.env.REACT_APP_API_URL}/api/payment/get-token`, config)
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/payment/get-token`, config)
         if (res.status === 200 && !res.data.error) {
             dispatch({
                 type: LOAD_BT_TOKEN_SUCCESS,
