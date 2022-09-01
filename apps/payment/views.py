@@ -1,3 +1,4 @@
+import logging
 from re import T
 from tkinter import E
 from django.shortcuts import render
@@ -15,6 +16,9 @@ from apps.product.models import Product
 
 from django.core.mail import send_mail
 import braintree
+
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 
@@ -109,7 +113,9 @@ class ProcessPaymentView(APIView):
     def post(self, request, format=None):
         user = self.request.user
         data = self.request.data
-
+        # logger.debug('TEST')
+        # logger.warning(user)
+        # logger.warning(data)
         tax = 0.18
 
         nonce = data['nonce']
@@ -118,13 +124,13 @@ class ProcessPaymentView(APIView):
         #Coupon none
 
         full_name = data['full_name']
-        address_line_1=['address_line_1']
-        address_line_2=['address_line_2']
-        city=['city']
-        state_province_region=['state_province_region']
-        postal_zip_code=['postal_zip_code']
-        country_region=['country_region']
-        telephone_number=['telephone_number']
+        address_line_1=data['address_line_1']
+        address_line_2=data['address_line_2']
+        city=data['city']
+        state_province_region=data['state_province_region']
+        postal_zip_code=data['postal_zip_code']
+        country_region=data['country_region']
+        telephone_number=data['telephone_number']
 
         if not Shipping.objects.filter(id__iexact=shipping_id).exists():
             return Response({
@@ -133,12 +139,12 @@ class ProcessPaymentView(APIView):
        
         cart = Cart.objects.get(user=user)
 
-        if not CartItem.objects.filter(user=user, cart=cart).exists():
+        if not CartItem.objects.filter(cart=cart).exists():
             return Response({
                 'error':'Need to have items in your cart'
             }, status=status.HTTP_404_NOT_FOUND)
        
-        cart_items = CartItem.objects.filter(user=user, cart=cart)
+        cart_items = CartItem.objects.filter(cart=cart)
 
         for cart_item in cart_items:
             if not Product.objects.filter(id = cart_item.product.id).exists():
@@ -183,6 +189,7 @@ class ProcessPaymentView(APIView):
             }, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         if newTransaction.is_success or newTransaction.transaction:
+            print('nani?')
             for cart_item in cart_items:
                 update_product = Product.objects.get(id=cart_item.product.id)
                 
@@ -196,8 +203,23 @@ class ProcessPaymentView(APIView):
                 Product.objects.filter(id = cart_item.product.id).update(
                     quantity = quantity, sold=sold
                 )
-            
+            print('Try to create order')           
             try:
+                print('All the fields')
+                print(user)
+                print(newTransaction.transaction.id)
+                print(total_amount)
+                print(full_name)
+                print(address_line_1)
+                print(city)
+                print(state_province_region)
+                print(postal_zip_code)
+                print(country_region)
+                print(telephone_number)
+                print(shipping_name)
+                print(shipping_time)
+                print(shipping_price)
+
                 order = Order.objects.create(
                     user=user,
                     transaction_id = newTransaction.transaction.id,
@@ -216,13 +238,15 @@ class ProcessPaymentView(APIView):
 
                 )
 
-
+                print('Here?')
             except:
+                logger.exception('An exception was throw')
+                logger.warning('ha pasado algo', exc_info=True)
                 return Response({
                 'error':'something went wrong retrieving total payment information'
             }, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            
+            print('Create order items')
             for cart_item in cart_items:
                 try:
                     product = Product.objects.get(id=cart_item.product.id)
@@ -238,7 +262,7 @@ class ProcessPaymentView(APIView):
                     return Response({
                         'error':'Transaction succeded and order create, but failed to create an order item'
                     }, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
+            print('Trying sending email')
             try:
                 send_mail(
                     'Your order Details',
@@ -246,8 +270,8 @@ class ProcessPaymentView(APIView):
                     +'\n\nWe recieved your order!'
                     +'\n\nGive us some time to proccess your order and ship it out to your'
                     +'\n\nSincerely'
-                    +'\n\nShop Time'
-                    +'\n\nfreddyxd5@gmail.com',
+                    +'\n\nShop Time',
+                    'freddyxd5@gmail.com',                    
                     [user.email],
                     fail_silently=False
                 )
@@ -256,11 +280,12 @@ class ProcessPaymentView(APIView):
             except:
                 return Response({
                     'error':'Transaction succeded and order create, but failed to send email'
-                },status = status.HTTP_500_INTERVAL_SERVER_ERROR)
+                },status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             
             try:
                 CartItem.objects.filter(cart=cart).delete()
+                cart.update(total_item=0)
             except:
                 return Response({
                     'error':'Transaction succeeded and order successful, but failed to clear cart'
@@ -271,6 +296,7 @@ class ProcessPaymentView(APIView):
             }, status=status.HTTP_200_OK)
 
         else:
+            logger.exception('asdsd', exc_info=True)
             return Response({
                 'error':'Transaction failed'
             }, status=status.HTTP_400_BAD_REQUEST)

@@ -73,8 +73,6 @@ const CartItem = ({
             try {
                 if (item.product.quantity >= item_count) {
                     await update_item(item, item_count)
-                } else {                    
-                    setAlert('Not enough in stock', 'red')
                 }
                 setRender(!render)
 

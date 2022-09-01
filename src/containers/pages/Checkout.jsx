@@ -84,7 +84,8 @@ const Checkout = ({
         coupon_name,
         shipping_id
     } = formData;
-
+    
+    console.log(formData)
     useEffect(() => {
         window.scrollTo(0, 0)
         get_shipping_options()
@@ -123,8 +124,7 @@ const Checkout = ({
         }else{
             process_payment(
                 nonce,
-                shipping_id,
-                '',
+                shipping_id,                
                 full_name,
                 address_line_1,
                 address_line_2,

@@ -123,6 +123,8 @@ class GetTotalView(APIView):
                     'total_cost': total_cost,
                     'total_compare_cost': total_compare_cost},
                     status=status.HTTP_200_OK)
+            else:
+                return Response({'cart':'No items yet'}, status=status.HTTP_200_OK)
 
         except:
             return Response({'error': 'Something went wrong when adding this product'},
