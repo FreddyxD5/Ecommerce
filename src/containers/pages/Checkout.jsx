@@ -1,19 +1,37 @@
 import Layout from "../../hocs/layout"
 import { connect } from "react-redux";
 import { Navigate, Link } from "react-router-dom";
+import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import CartItem from "../../components/cart/CartItem";
 import { useState, useEffect } from "react";
-import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+
 import { setAlert } from "../../redux/actions/alert";
-import { get_shipping_options } from "../../redux/actions/shipping";
 
 import {
     update_item,
     remove_item
 } from "../../redux/actions/cart";
 
+import { get_shipping_options } from "../../redux/actions/shipping";
+
+import { refresh } from "../../redux/actions/auth";
+
+import {
+    get_payment_total,
+    get_client_token,
+    process_payment
+} from "../../redux/actions/payment";
+
+
+import DropIn from "braintree-web-drop-in-react";
+import { CradleLoader } from "react-loader-spinner";
+import { countries } from "../../helpers/fixCountries"
+
+import ShippingForm from "../../components/checkout/ShippingForm";
+
 const Checkout = ({
     isAuthenticated,
+    user,
     items,
     update_item,
     remove_item,
@@ -23,11 +41,19 @@ const Checkout = ({
     total_compare_amount,
     get_shipping_options,
     shipping,
+    clientToken,
     refresh,
     get_payment_total,
     get_client_token,
     process_payment,
-    check_coupon
+    clienToken,
+    made_payment,
+    loading,
+    original_price,
+    total_after_coupon,
+    estimated_tax,
+    shipping_cost,
+    coupon,
 }) => {
     const [formData, setFormData] = useState({
         full_name: '',
@@ -59,16 +85,58 @@ const Checkout = ({
         coupon_name,
         shipping_id
     } = formData;
-
+    
+    console.log(formData)
     useEffect(() => {
         window.scrollTo(0, 0)
         get_shipping_options()
     }, [])
 
+    useEffect(() => {
+        get_client_token();
+    }, [user])
+
+    useEffect(() => {
+        get_payment_total(shipping_id, '')
+    }, [shipping_id])
+
     if (!isAuthenticated)
         return <Navigate to="/" />
 
-    const onChange = e => setFormData({...formData, [e.target.name]:e.target.value})
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+
+    const buy = async e =>{
+        e.preventDefault()
+        let nonce = await data.instance.requestPaymentMethod();
+        if(coupon && coupon !== undefined && coupon !== null){
+            process_payment(
+                nonce,
+                shipping_id,
+                coupon.name,
+                full_name,
+                address_line_1,
+                address_line_2,
+                city,
+                state_province_region,
+                postal_zip_code,
+                country_region,
+                telephone_number
+            );
+        }else{
+            process_payment(
+                nonce,
+                shipping_id,                
+                full_name,
+                address_line_1,
+                address_line_2,
+                city,
+                state_province_region,
+                postal_zip_code,
+                country_region,
+                telephone_number
+            );
+        }
+    }
 
     const showItems = () => {
         return (
@@ -134,13 +202,12 @@ const Checkout = ({
 
     const renderShipping = () => {
         if (shipping && shipping !== null && shipping !== undefined) {
-            console.log(shipping)
             return (
                 <div className="mb-5">
                     {
-                        shipping.map((shipping_option, index) => (                            
+                        shipping.map((shipping_option, index) => (
                             <div key={index}>
-                                <input                                    
+                                <input
                                     onChange={e => onChange(e)}
                                     value={shipping_option.id}
                                     name='shipping_id'
@@ -159,6 +226,59 @@ const Checkout = ({
         }
     }
 
+    const renderPaymentInfo = () => {
+        if (!clientToken) {
+            if (!isAuthenticated) {
+                <Link
+                    to="/login"
+                    className="w-full ng-indigo-600 border-transparent rounded-md" > Login
+                </Link>
+            } else {
+                <button className="w-full ng-indigo-600 border-transparent rounded-md">
+                    <CradleLoader
+                        color="#fff"
+                        height={20}
+                        width={20}
+                    />
+                </button>
+            }
+        } else {
+            return (
+                <>
+                    <DropIn
+                        options={{
+                            authorization: clientToken,
+                            paypal: {
+                                flow: 'vault'
+                            }
+                        }}
+
+                        onInstance={instance => (data.instance = instance )}
+                    />
+                    <div className="mt-6">
+                        {loading ?
+                            <button className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500">
+                                <CradleLoader
+                                    color="#fff"
+                                    height={20}
+                                    width={20}
+                                />
+                            </button> :
+                            <button
+                                type="submit"
+                                className="w-full bg-green-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500">
+                                Place Order</button>
+                        }
+                    </div>
+
+                </>
+            )
+        }
+    }
+
+    if(made_payment){
+        return <Navigate to="/thankyou" />
+    }
     return (
         <Layout>
             <div className="bg-white">
@@ -173,48 +293,30 @@ const Checkout = ({
                                 {showItems()}
                             </ul>
                         </section>
-                        <section
-                            aria-labelledby="summary-heading"
-                            className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
-                        >
-                            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
-                                Order summary
-                            </h2>
+                        <ShippingForm
+                            full_name={full_name}
+                            address_line_1={address_line_1}
+                            address_line_2={address_line_2}
+                            city={city}
+                            contry_region={country_region}
+                            state_province_region={state_province_region}
+                            postal_zip_code={postal_zip_code}
+                            telephone_number={telephone_number}
+                            countries={countries}
+                            onChange={onChange}
+                            buy={buy}
+                            user={user}
+                            renderShipping={renderShipping}
+                            total_amount={total_amount}
+                            total_compare_amount={total_compare_amount}
+                            shipping_cost={shipping_cost}
+                            shipping_id={shipping_id}
+                            shipping={shipping}
+                            estimated_tax={estimated_tax}
+                            checkOutButton={checkOutButton}
+                            renderPaymentInfo={renderPaymentInfo}
 
-                            <dl className="mt-6 space-y-4">
-                                <div className="flex items-center justify-between">
-                                    {renderShipping()}
-                                </div>
-                                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                                    <dt className="flex items-center text-sm text-gray-600">
-                                        <span>Estimate price</span>
-                                        {/* <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Learn more about how shipping is calculated</span>
-                    <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-                  </a> */}
-                                    </dt>
-                                    <dd className="text-sm font-medium text-gray-900">${total_compare_amount.toFixed(2)}</dd>
-                                </div>
-                                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                                    <dt className="flex text-sm text-gray-600">
-                                        <span>Discount</span>
-                                        <a href="#" className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                                            <span className="sr-only">Learn more about how tax is calculated</span>
-                                            <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-                                        </a>
-                                    </dt>
-                                    <dd className="text-sm font-medium text-gray-900">$0.00</dd>
-                                </div>
-                                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                                    <dt className="text-base font-medium text-gray-900">Order total</dt>
-                                    <dd className="text-base font-medium text-gray-900">${total_amount.toFixed(2)}</dd>
-                                </div>
-                            </dl>
-
-                            <div className="mt-6">
-                                {checkOutButton()}
-                            </div>
-                        </section>
+                        />
                     </div>
                 </div>
             </div>
@@ -228,8 +330,17 @@ const mapStateToProps = state => ({
     items: state.Cart.items,
     total_items: state.Cart.total_items,
     shipping: state.Shipping.shipping,
+    clientToken: state.Payment.clientToken,
     total_amount: state.Cart.amount,
     total_compare_amount: state.Cart.compare_amount,
+    clienToken: state.Payment.clientToken,
+    made_payment: state.Payment.made_payment,
+    loading: state.Payment.loading,
+    original_price: state.Payment.original_price,
+    total_after_coupon: state.Payment.total_after_coupon,
+    estimated_tax: state.Payment.estimated_tax,
+    shipping_cost: state.Payment.shipping_cost,
+    coupon : null
 
 })
 export default connect(mapStateToProps, {
@@ -237,4 +348,7 @@ export default connect(mapStateToProps, {
     remove_item,
     setAlert,
     get_shipping_options,
+    get_payment_total,
+    get_client_token,
+    process_payment
 })(Checkout);

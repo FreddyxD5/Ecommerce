@@ -5,6 +5,7 @@ from datetime import datetime
 from apps.product.models import Product
 from apps.orders.countries import Countries
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 user = get_user_model()
 
@@ -35,7 +36,7 @@ class Order(models.Model):
     shipping_name = models.CharField(max_length=255)
     shipping_time = models.CharField(max_length=100)
     shipping_price = models.DecimalField(max_digits=5, decimal_places=2) 
-    date_issued = models.DateTimeField(default=datetime.now) 
+    # date_issued = models.DateTimeField(default=timezone.now()) 
 
     def __str__(self):
         return self.transaction_id

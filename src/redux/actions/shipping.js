@@ -14,8 +14,7 @@ export const get_shipping_options = () => async dispatch =>{
     try{        
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/shipping/get-shipping-options`, config)
 
-        if (res.status === 200){           
-            console.log(res.data) 
+        if (res.status === 200){                       
             dispatch({
                 type:GET_SHIPPING_OPTION_SUCCESS,
                 payload:res.data

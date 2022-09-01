@@ -56,13 +56,13 @@ const ProductDetail = ({
         get_items()                                
     }, [])
     
-    if (cart && cart!== undefined && cart!== null){
-        cart.map(products=>{            
-            if (products.product.id === product.id){ 
-                inBag = true
-            }
-        })
-    }
+    // if (cart && cart!== undefined && cart!== null){
+    //     cart.map(products=>{            
+    //         if (products.product.id === product.id){ 
+    //             inBag = true
+    //         }
+    //     })
+    // }
     return (
         <Layout>
             <div className="bg-white">

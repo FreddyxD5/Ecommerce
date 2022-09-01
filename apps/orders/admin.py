@@ -9,7 +9,7 @@ class OrderResource(resources.ModelResource):
 
 class OrderAdmin(ImportExportActionModelAdmin):
     def has_delete_permission(self, request,obj=None):
-        return False
+        return True
     resource_class = OrderResource
     list_display = ('id', 'transaction_id','amount','status',)
     list_display_links = ('id', 'transaction_id', )
@@ -24,7 +24,7 @@ class OrderItemResource(resources.ModelResource):
 
 class OrderItemAdmin(ImportExportActionModelAdmin):
     def has_delete_permission(self, request,obj=None):
-        return False
+        return True
     resource_class = OrderItemResource
     list_display = ('id', 'name','price','count', )
     list_display_links = ('id', )
