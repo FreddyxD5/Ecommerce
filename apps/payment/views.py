@@ -284,12 +284,14 @@ class ProcessPaymentView(APIView):
 
             
             try:
-                CartItem.objects.filter(cart=cart).delete()
-                cart.update(total_item=0)
+                CartItem.objects.filter(cart=cart).delete()                
+                Cart.objects.filter(user=user).update(total_item=0)
             except:
                 return Response({
                     'error':'Transaction succeeded and order successful, but failed to clear cart'
                 }, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+          
 
             return Response({
                 'success':'Transaction successful and order was created'

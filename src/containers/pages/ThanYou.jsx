@@ -1,10 +1,17 @@
 import Layout from "../../hocs/layout";
 import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { reset } from "../../redux/actions/payment";
+import { useEffect } from "react";
 
 const ThankYou = ({
-    isAuthenticated
+    isAuthenticated,
+    reset
 }) => {
+
+    useEffect(()=>{
+        reset()
+    },[])
     if (!isAuthenticated && isAuthenticated !== null){
         console.log(isAuthenticated)
         console.log('what')
@@ -39,5 +46,6 @@ const stateMapsToProps = state =>({
 })
 
 export default connect(stateMapsToProps, {
+    reset
 
 })(ThankYou);
