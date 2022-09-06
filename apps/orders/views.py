@@ -9,24 +9,26 @@ from apps.orders.api.serializers import ListOrderSerializer, ListOrderDetailSeri
 
 class ListOrdersView(APIView):
     def get(self, request, format=None):        
-        user = self.request.user        
+        user = self.request.user                   
         try:
             orders = Order.objects.order_by('-date_issued').filter(user=user)            
-            if orders:
+            if orders:                          
                 orders = ListOrderSerializer(orders, many=True)
                 return Response({'orders':orders.data}, status=status.HTTP_200_OK)
-        except:
+        except:            
             return Response({
                 'error':'Something went wrong when retrieving orders'
                 }, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ListOrderDetailView(APIView):
-    def get(self, request, transaction_id,format=None):
-        user = self.request.user
+    def get(self, request, transactionId,format=None):
+        user = self.request.user        
+        # order = Order.objects.filter(user=user, transaction_id=transactionId)
+        
         try:
-            if Order.objects.filter(user=user, transaction_id=transaction_id).exists():                  
-                order = Order.objects.filter(user=user, transaction_id= transaction_id).first()                
+            if Order.objects.filter(user=user, transaction_id=transactionId).exists():                  
+                order = Order.objects.filter(user=user, transaction_id=str(transactionId)).first()                
                 order = ListOrderDetailSerializer(order)                
                 return Response({
                     'order':order.data

@@ -11,6 +11,10 @@ class ListOrderSerializer(serializers.ModelSerializer):
             'amount',
             'shipping_price',
             'date_issued',
+            'address_line_1',
+            'address_line_2',
+            'shipping_time'
+            
         )
 
 class OrderProductSerializer(serializers.ModelSerializer):

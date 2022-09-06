@@ -230,7 +230,7 @@ const Checkout = ({
         if (!clientToken) {
             if (!isAuthenticated) {
                 <Link
-                    to="/login"
+                    to="/signin"
                     className="w-full ng-indigo-600 border-transparent rounded-md" > Login
                 </Link>
             } else {

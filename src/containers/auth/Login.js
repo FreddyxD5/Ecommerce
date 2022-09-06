@@ -7,7 +7,11 @@ import { Link, Navigate } from "react-router-dom";
 import { get_items } from "../../redux/actions/cart";
 
 
-export const Login = ({login,loading,get_items})=>{
+export const Login = ({
+  login,
+  loading,
+  get_items,
+  isAuthenticated})=>{
     const [loginSuccess, setLoginSucess] = useState(false)
     useEffect(()=>{
         window.scrollTo(0,0)
@@ -30,6 +34,10 @@ export const Login = ({login,loading,get_items})=>{
         e.preventDefault();        
         login(email, password)
         setLoginSucess(true)
+    }
+
+    if(isAuthenticated){      
+      return <Navigate to="/" />
     }
 
     if (loginSuccess && !loading){
@@ -140,6 +148,7 @@ export const Login = ({login,loading,get_items})=>{
 
 const mapStateToProps = state =>({
   loading : state.Auth.loading,  
+  isAuthenticated: state.Auth.isAuthenticated
 
 })
 

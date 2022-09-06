@@ -26,7 +26,7 @@ class Order(models.Model):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     full_name = models.CharField(max_length=255)
     address_line_1 = models.TextField(blank=True)
-    address_line_2 = models.TextField(blank=True)
+    address_line_2 = models.TextField(blank=True, default='')
     city = models.CharField(max_length=255, blank=True)
     state_province_region = models.CharField(max_length=255, blank=True)
     postal_zip_code = models.CharField(max_length=20)
@@ -36,7 +36,7 @@ class Order(models.Model):
     shipping_name = models.CharField(max_length=255)
     shipping_time = models.CharField(max_length=100)
     shipping_price = models.DecimalField(max_digits=5, decimal_places=2) 
-    # date_issued = models.DateTimeField(default=timezone.now()) 
+    date_issued = models.DateTimeField(default=timezone.now()) 
 
     def __str__(self):
         return self.transaction_id
