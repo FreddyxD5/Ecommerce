@@ -110,7 +110,7 @@ const CartItem = ({
 
     }
 
-
+ 
     return (
         <li className="flex py-6 sm:py-10">
             <div className="flex-shrink-0">

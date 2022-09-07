@@ -4,12 +4,12 @@ import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { NavLink, Link, Navigate } from "react-router-dom"
 
-import {ShoppingCartIcon} from "@heroicons/react/solid"
+import { ShoppingCartIcon } from "@heroicons/react/solid"
 import {
   ChartBarIcon,
   CursorClickIcon,
   MenuIcon,
-  ShieldCheckIcon,  
+  ShieldCheckIcon,
   ViewGridIcon,
   XIcon,
 } from '@heroicons/react/outline'
@@ -77,7 +77,7 @@ function Navbar({
     setRender(!render);
   }
 
-  if (render) {    
+  if (render) {
     return <Navigate to='/search' replace={true} />;
   }
 
@@ -115,43 +115,19 @@ function Navbar({
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <Link 
+                  to="/dashboard"
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'block px-4 py-2 text-sm'
                   )}
                 >
-                  Account settings
-                </a>
+                  Dashboard
+                </Link >
               )}
             </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  Support
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  License
-                </a>
-              )}
-            </Menu.Item>
+            
+                        
             <form method="POST" action="#">
               <Menu.Item>
                 {({ active }) => (
@@ -232,13 +208,13 @@ function Navbar({
                 }
 
               </Popover.Group>
-              <div className="flex items-center md:ml-12">                
-                  <Link to="/cart">
-                  <ShoppingCartIcon className='h-8 w-8 text-gray-300 mr-4 cursor-pointer justify-center'/>
-                    <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white  font-semibold rounded-full px-2 text-center">
-                      {total_items}
-                    </span>                    
-                  </Link>                
+              <div className="flex items-center md:ml-12">
+                <Link to="/cart">
+                  <ShoppingCartIcon className='h-8 w-8 text-gray-300 mr-4 cursor-pointer justify-center' />
+                  <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white  font-semibold rounded-full px-2 text-center">
+                    {total_items}
+                  </span>
+                </Link>
                 {isAuthenticated ? authLinks : guestLinks}
               </div>
             </div>
@@ -327,18 +303,29 @@ function Navbar({
                   </a>
                 </div>
                 <div className="mt-6">
-                  <a
-                    href="#"
-                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                  >
-                    Sign up
-                  </a>
-                  <p className="mt-6 text-center text-base font-medium text-gray-500">
-                    Existing customer?{' '}
-                    <a href="#" className="text-indigo-600 hover:text-indigo-500">
-                      Sign in
-                    </a>
-                  </p>
+                  {isAuthenticated ?
+                    <Link
+                      to="/dashboard"
+                      className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700" >
+                      Dashboard
+                    </Link> :
+                    <>
+                      <Link
+                        to="/signup"
+                        className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        Sign up
+                      </Link>
+                      <p className="mt-6 text-center text-base font-medium text-gray-500">
+                        Existing customer?{' '}
+                        <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
+                          Sign in
+                        </Link>
+                      </p>
+                    </>
+                  }
+
+
                 </div>
               </div>
             </div>
@@ -353,7 +340,7 @@ const mapStateProps = state => ({
   isAuthenticated: state.Auth.isAuthenticated,
   user: state.Auth.user,
   categories: state.Categories.categories,
-  total_items : state.Cart.total_items
+  total_items: state.Cart.total_items
 
 })
 

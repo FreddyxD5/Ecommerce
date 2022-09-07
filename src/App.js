@@ -18,6 +18,9 @@ import Cart from './containers/pages/Cart';
 import Checkout from './containers/pages/Checkout';
 import ThankYou from './containers/pages/ThanYou';
 import PrivateRoute from './hocs/PrivateRoute';
+import Dashboard from './containers/pages/Dashboard';
+import DashboardPayments from './containers/pages/DashboardPayments';
+import DashboardPaymentsDetail from './containers/pages/DashboardPaymentsDetail';
 
 
 
@@ -42,10 +45,14 @@ function App() {
           <Route exact path='/cart' element={<Cart/> }></Route>
           <Route exact path='/checkout' element ={<Checkout />} />
           <Route exact path='/thankyou' element ={<ThankYou />} />
+          <Route exact path='/dashboard' element ={<Dashboard />} />
+          <Route exact path='/dashboard/payments' element ={<DashboardPayments />} />
+          <Route exact path='/dashboard/payment/:transaction_id' element ={<DashboardPaymentsDetail />} />
+
         </Routes>
       </Router>
     </Provider>
   );
 }
-
+ 
 export default App;
