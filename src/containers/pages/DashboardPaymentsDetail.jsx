@@ -319,7 +319,7 @@ const DashboardPaymentsDetail = ({
 
                                                                 <dl className="mt-6 space-y-4">
                                                                     <div className="border-t flex items-center justify-between">
-                                                                        <dt className="font-medium text-gray-900">Billing address</dt>
+                                                                        <dt className="text-gray-900">Address</dt>
                                                                         <dd className="mt-3 text-gray-500">
                                                                             <span className="block">{order.address_line_1}</span>
                                                                             <span className="block">{order.address_line_2}</span>
