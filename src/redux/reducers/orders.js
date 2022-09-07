@@ -34,7 +34,6 @@ export default function Orders(state=initialState, action){
                 ...state,
                 orders:{}
             }
-
         default:
             return state
     }

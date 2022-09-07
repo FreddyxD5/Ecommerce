@@ -40,16 +40,17 @@ export const list_orders = () => async dispatch =>{
     
 }
 
-export const get_order_detail = (transactionId) => async dispatch =>{
-
+export const get_order_detail = transactionId => async dispatch  =>{    
     if (localStorage.getItem('access')){
-        try{
-            const config = {
-                headers:{
-                    'Accept':'application/json',
-                    'Authorization':`JWT ${localStorage.getItem('access')}`
-                }
+        const config = {
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+                'Authorization':`JWT ${localStorage.getItem('access')}`,
+                
             }
+        }
+        try{                        
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/get-order/${transactionId}`, config)
             if(res.status === 200 &&  !res.data.error){
                 dispatch({
@@ -68,6 +69,8 @@ export const get_order_detail = (transactionId) => async dispatch =>{
                 type:GET_ORDER_DETAIL_FAIL
             })
         }
+    }else{
+        console.log('nani?')
     }
 
     

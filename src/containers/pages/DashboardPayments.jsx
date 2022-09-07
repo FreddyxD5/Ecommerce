@@ -265,9 +265,9 @@ const DashboardPayments = ({
                                         <h2 className="sr-only">Products purchased</h2>
 
                                         <div className="space-y-4">
-                                            {orders.map((product) => (
+                                            {orders.map((product, index) => (
                                                 <>
-                                                    <div className="text-sm border-b border-gray-200 mt-2 sm:flex sm:justify-between">
+                                                    <div key={index} className="text-sm border-b border-gray-200 mt-2 sm:flex sm:justify-between">
                                                         <dl className="flex">
                                                             <dt className="text-gray-500">Order number:&nbsp;</dt>
                                                             <dd className="font-medium text-gray-900">{product.transaction_id}</dd>

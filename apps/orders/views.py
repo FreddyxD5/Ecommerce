@@ -24,8 +24,6 @@ class ListOrdersView(APIView):
 class ListOrderDetailView(APIView):
     def get(self, request, transactionId,format=None):
         user = self.request.user        
-        # order = Order.objects.filter(user=user, transaction_id=transactionId)
-        
         try:
             if Order.objects.filter(user=user, transaction_id=transactionId).exists():                  
                 order = Order.objects.filter(user=user, transaction_id=str(transactionId)).first()                
