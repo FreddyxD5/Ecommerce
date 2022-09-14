@@ -17,6 +17,7 @@ const initialState = {
     original_price:0.0,    
     total_amount:0.0,
     total_compare_amount:0.0,
+    total_after_coupon:0.0,
     estimated_tax:0.0,
     shipping_cost:0.0,
     loading:false
@@ -31,7 +32,8 @@ export default function Payment(state=initialState, action){
                 ...state,
                 original_price: payload.original_price,
                 total_amount: payload.total_amount,
-                total_compare_amount : payload.total_compare_amount,
+                total_compare_amount : payload.total_compare_amount,                
+                total_after_coupon : payload.total_after_coupon,
                 estimated_tax : payload.estimated_tax,
                 shipping_cost : payload.shipping_cost
             }
@@ -41,6 +43,7 @@ export default function Payment(state=initialState, action){
                 original_price:0.0,
                 total_amount:0.0,
                 total_compare_amount:0.0,
+                total_after_coupon:0.0,
                 estimated_tax:0.0,
                 shipping_cost:0.0
             }

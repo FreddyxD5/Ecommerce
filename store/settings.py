@@ -36,6 +36,7 @@ DJANGO_APPS = [
 ]
 PROJECT_APPS = [
     'apps.user',    
+    'apps.user_profile',
 ]
 
 ECOMMERCE_APPS = [
@@ -44,7 +45,8 @@ ECOMMERCE_APPS = [
     'apps.cart',
     'apps.shipping',
     'apps.orders',
-    'apps.payment'
+    'apps.payment',
+    'apps.coupons',
 ]
 
 THIRD_PARTY_APPS = [

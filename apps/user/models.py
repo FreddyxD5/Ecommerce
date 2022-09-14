@@ -1,8 +1,9 @@
-from multiprocessing.sharedctypes import Value
 import os
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from apps.cart.models import Cart
+
+from apps.user_profile.models import UserProfile
 
 
 class UserAccountManager(BaseUserManager):
@@ -13,8 +14,13 @@ class UserAccountManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
+        
         shopping_cart = Cart.objects.create(user=user)
         shopping_cart.save()
+
+        user_profile = UserProfile.objects.create(user=user)
+        user_profile.save()
+
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -22,6 +28,7 @@ class UserAccountManager(BaseUserManager):
         user.is_superuser = True
         user.is_staff = True
         user.save()
+        
         return user
 
 
