@@ -1,5 +1,4 @@
 import moment from "moment"
-import Layout from "../../hocs/layout";
 import { connect } from "react-redux";
 import { list_orders } from "../../redux/actions/orders";
 import DashboardLink from "../../components/dashboard/DashboardLink";
@@ -14,40 +13,15 @@ import { Link, Navigate } from "react-router-dom";
 
 import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
-import {
-    PaperClipIcon,
-    BellIcon,
-    CalendarIcon,
-    ChartBarIcon,
-    FolderIcon,
-    HomeIcon,
-    InboxIcon,
-    MenuAlt2Icon,
-    UsersIcon,
+import {    
+    BellIcon,            
+    HomeIcon,    
+    MenuAlt2Icon,    
     XIcon,
 } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
 
 
-const products = [
-    {
-        id: 1,
-        name: 'Distant Mountains Artwork Tee',
-        price: '$36.00',
-        description: 'You awake in a new, mysterious land. Mist hangs low along the distant mountains. What does it mean?',
-        address: ['Floyd Miles', '7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'],
-        email: 'f•••@example.com',
-        phone: '1•••••••••40',
-        href: '#',
-        status: 'Processing',
-        step: 1,
-        date: 'March 24, 2021',
-        datetime: '2021-03-24',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg',
-        imageAlt: 'Off-white t-shirt with circular dot illustration on the front of mountain ridges that fade.',
-    },
-    // More products...
-]
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')

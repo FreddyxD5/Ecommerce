@@ -13,12 +13,6 @@ def home(self, request):
 
 class getUserProfileView(APIView):    
     def get(self, request, format=None):
-        # print('WTF')
-        # print(self.request.user)
-        # user_profile = UserProfile.objects.get(user=self.request.user)
-        # user_profile = UserProfileSerializer(user_profile)
-        # print(user_profile)
-        # print('uh?')
         try:
             user = self.request.user
             user_profile = UserProfile.objects.get(user=user)

@@ -1,19 +1,10 @@
 import { Link } from 'react-router-dom'
-import {
-    PaperClipIcon,
-    BellIcon,
-    CalendarIcon,
-    ChartBarIcon,
-    FolderIcon,
-    HomeIcon,
-    InboxIcon,
-    MenuAlt2Icon,
-    UsersIcon,
-    XIcon,
+import {                    
+    HomeIcon,                
     CreditCardIcon,
 } from '@heroicons/react/outline'
 
-import { SearchIcon } from '@heroicons/react/solid'
+import { SearchIcon, UserIcon } from '@heroicons/react/solid'
 
 
 function classNames(...classes) {
@@ -39,6 +30,22 @@ const DashboardLink = () => {
                 />
                 Dashboard
             </Link>
+            <Link to="/dashboard/profile"
+
+                className={classNames(
+                    'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                    'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                )}
+            >
+                <UserIcon
+                    className={classNames(
+                        'text-gray-400 group-hover:text-gray-500',
+                        'mr-4 flex-shrink-0 h-6 w-6'
+                    )}
+                    aria-hidden="true"
+                />
+                Profile
+            </Link>
             <Link to="/dashboard/payments"
 
                 className={classNames(
@@ -54,7 +61,7 @@ const DashboardLink = () => {
                     aria-hidden="true"
                 />
                 Payment History
-            </Link>
+            </Link>            
         </>
     )
 }
