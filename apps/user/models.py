@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from apps.cart.models import Cart
 
 from apps.user_profile.models import UserProfile
+from apps.wishlist.models import Wishlist
 
 
 class UserAccountManager(BaseUserManager):
@@ -20,6 +21,9 @@ class UserAccountManager(BaseUserManager):
 
         user_profile = UserProfile.objects.create(user=user)
         user_profile.save()
+
+        wishlist = Wishlist.objects.create(user=user)
+        wishlist.save()
 
         return user
 
