@@ -20,6 +20,7 @@ const Cart = ({
   get_total,
   get_item_total,
   items,
+  wishlist_items,
   amount,
   compare_amount,
   update_item,
@@ -37,6 +38,7 @@ const Cart = ({
     get_item_total()    
   }, [render])
 
+  
   const showItems = () => {   
     return (
       <div>
@@ -68,6 +70,7 @@ const Cart = ({
       </div>
     )
   }
+
 
   const checkOutButton = () => {
     if (total_items < 1) {
@@ -115,6 +118,7 @@ const Cart = ({
                 {showItems()}
               </ul>
             </section>
+            
             <section
               aria-labelledby="summary-heading"
               className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
@@ -169,6 +173,7 @@ const Cart = ({
 const mapStateToProps = state => ({
   isAuthenticated: state.Auth.isAuthenticated,
   items: state.Cart.items,
+  wishlist_items: state.Wishlist.items,
   amount: state.Cart.amount,
   compare_amount: state.Cart.compare_amount,
   total_items: state.Cart.total_items,  

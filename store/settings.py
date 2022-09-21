@@ -47,6 +47,7 @@ ECOMMERCE_APPS = [
     'apps.orders',
     'apps.payment',
     'apps.coupons',
+    'apps.wishlist'
 ]
 
 THIRD_PARTY_APPS = [

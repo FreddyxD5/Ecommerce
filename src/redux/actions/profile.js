@@ -19,8 +19,7 @@ export const get_user_profile = () => async dispatch =>{
         try{
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile/user_profile`, config)
 
-            if (res.status ===200 && !res.data.error){
-                console.log(res.data)
+            if (res.status ===200 && !res.data.error){                
                 dispatch({
                     type:GET_USER_PROFILE_SUCCESS,
                     payload:res.data
