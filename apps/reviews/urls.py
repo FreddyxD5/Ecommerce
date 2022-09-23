@@ -5,7 +5,7 @@ from apps.reviews.views import (
     )
 
 urlpatterns = [
-    path('filter_review/<productId>',FilterProductReviewsView.as_view()),
+    path('filter_reviews/<productId>',FilterProductReviewsView.as_view()),
     path('get_review/<productId>',GetProductReviewView.as_view()),
     path('get_reviews/<productId>',GetProductReviewsView.as_view()),
     path('add_review/<productId>',CreateProductReviewView.as_view()),
