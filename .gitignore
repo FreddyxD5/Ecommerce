@@ -30,7 +30,7 @@ yarn-error.log*
 *.pyc
 __pycache__/
 .vscode/
-.env
+#.env
 #db.sqlite3
 0*.py
 *.py[cod]
@@ -39,7 +39,7 @@ __pycache__/
 .cache
 
 #Enviroments
-.env
+#.env
 .venv
 
 
