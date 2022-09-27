@@ -3,10 +3,15 @@ import { useParams } from "react-router-dom";
 import { HeartIcon } from '@heroicons/react/outline'
 import { connect } from "react-redux"
 import { useNavigate, Navigate } from "react-router-dom";
-import {Oval} from "react-loader-spinner" 
+import { Oval } from "react-loader-spinner"
 import Layout from "../../hocs/layout";
 import ImageGallery from "../../components/product/imageGallery";
+
+
 import { get_product, get_related_products } from "../../redux/actions/products";
+import StarRating from "../../components/rating/StarRating";
+
+
 import {
     get_items,
     add_item,
@@ -14,7 +19,16 @@ import {
     get_item_total
 } from "../../redux/actions/cart"
 
-import { 
+import {
+    get_product_review,
+    get_product_reviews,
+    add_review,
+    update_review,
+    delete_review,
+    filter_reviews
+} from "../../redux/actions/reviews";
+
+import {
     add_wishlist_item,
     get_wishlist,
     get_wishlist_item_total,
@@ -38,32 +52,51 @@ const ProductDetail = ({
     get_wishlist_item_total,
     remove_wishlist_item,
     wishlist,
+    get_product_review,
+    get_product_reviews,
+    add_review,
+    update_review,
+    delete_review,
+    filter_reviews,
+    review,
+    reviews
 }) => {
 
     const params = useParams()
     const productId = params.productId
     const [loading, setLoading] = useState(false)
     let inBag = false
-    
+
 
     const navigate = useNavigate()
 
-    const addToCart = async () =>{
-        if (product && product !== null && product !== undefined && product.quantity>0){
+    const [formData, setFormData] = useState({
+        comment: '',
+        rating: '0'
+    })
+
+    const { comment, rating } = formData
+
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
+
+    const addToCart = async () => {
+        if (product && product !== null && product !== undefined && product.quantity > 0) {
             setLoading(true)
             await add_item(product);
             await get_items();
             await get_total();
             await get_item_total();
             setLoading(false)
-            navigate('/cart')   
+            navigate('/cart')
         }
     }
 
-    const addToWishlist = async () =>{
-        if(isAuthenticated){
+
+
+    const addToWishlist = async () => {
+        if (isAuthenticated) {
             let isPresent = false
-            
+
             if (
                 wishlist &&
                 wishlist !== null &&
@@ -71,19 +104,19 @@ const ProductDetail = ({
                 product &&
                 product !== null &&
                 product !== undefined
-                ){                
-                    wishlist.items.map(item=>{
-                        if(item.product.id.toString() === product.id.toString()){
-                            isPresent = true;
-                        }
-                    });
-                }
-            
-            if (isPresent){
+            ) {
+                wishlist.items.map(item => {
+                    if (item.product.id.toString() === product.id.toString()) {
+                        isPresent = true;
+                    }
+                });
+            }
+
+            if (isPresent) {
                 await remove_wishlist_item(product.id);
                 await get_wishlist();
-                await get_wishlist_item_total();            
-            }else{
+                await get_wishlist_item_total();
+            } else {
                 await remove_wishlist_item(product.id)
                 await add_wishlist_item(productId)
                 await get_wishlist()
@@ -92,31 +125,83 @@ const ProductDetail = ({
                 await get_total()
                 await get_item_total()
             }
-        }else{
-            return <Navigate to="/cart" />            
+        } else {
+            return <Navigate to="/cart" />
         }
 
-        
+
     }
 
-    
-    
-   
+    const showReviews = () => {
+        return (
+            <>
+                {
+                    reviews &&
+                        reviews !== null &&
+                        reviews !== undefined &&
+                        reviews.length !== 0 ?
+                        reviews.map((item, index) => {
+                            return (
+                                <>
+                                    <div key={index} className="col-span-2 mt-4">
 
-    
-    useEffect(() => {        
-        window.scrollTo(0,0)
+                                        <div class="flex items-stretch space-x-4">
+                                            <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt="" />
+                                            <div class="font-medium">
+                                                <h6 className="dark:text-gray-400">{item.user}</h6>
+                                                <div class="text-sm text-black-500 dark:text-gray-600">{item.comment}</div>
+                                            </div>
+                                            <div className="">
+                                                <StarRating
+                                                    selectedStars={item.rating}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </>
+                            )
+                        }) :
+                        <h6>There's no reviews for this product yet</h6>
+
+                }
+            </>
+        )
+    }
+
+
+    const create_review = async e => {
+        e.preventDefault()
+        add_review(productId, rating, comment)
+        setFormData({
+            comment: "",
+            rating: '0'
+        })
+    };
+
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
         get_product(productId);
         get_related_products(productId);
         get_wishlist()
         get_wishlist_item_total()
-        get_items()                                
+        get_items()
     }, [])
-    
-    
-    if (cart && cart!== undefined && cart!== null && productId !== null && productId!== undefined){
-        cart.map(products=>{            
-            if (products.product.id === productId){ 
+
+    useEffect(() => {
+        get_product_reviews(productId)
+    }, [productId])
+
+    useEffect(() => {
+        get_product_review(productId)
+    }, [productId])
+
+
+
+    if (cart && cart !== undefined && cart !== null && productId !== null && productId !== undefined) {
+        cart.map(products => {
+            if (products.product.id === productId) {
                 inBag = true
             }
         })
@@ -127,7 +212,7 @@ const ProductDetail = ({
                 <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
                     <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
                         {/* Image gallery */}
-                        <ImageGallery data ={product && product.image}/>
+                        <ImageGallery data={product && product.image} />
                         {/* Product info */}
                         <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
                             <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">{product && product.name}</h1>
@@ -192,14 +277,14 @@ const ProductDetail = ({
                                 <p>
                                     {
                                         product &&
-                                        product !== null &&
-                                        product !== undefined &&
-                                        product.quantity > 0 ? (
+                                            product !== null &&
+                                            product !== undefined &&
+                                            product.quantity > 0 ? (
                                             <span className="text-green-500">
                                                 In stock
                                             </span>
 
-                                        ):(<span className="text-red-500">
+                                        ) : (<span className="text-red-500">
                                             out Stock
                                         </span>)
                                     }
@@ -207,21 +292,21 @@ const ProductDetail = ({
 
                                 <div className="mt-6 flex sm:flex-col1">
                                     {inBag ?
-                                        <button                                        
-                                        type="submit"
-                                        className="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
-                                    >
-                                     Este producto ya esta en su carrito
-                                    </button>:
-                                    <button
-                                    onClick={addToCart}
-                                    type="submit"
-                                    className="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
-                                >
-                                    Agregar al carrito
-                                </button>}
+                                        <button
+                                            type="submit"
+                                            className="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
+                                        >
+                                            Este producto ya esta en su carrito
+                                        </button> :
+                                        <button
+                                            onClick={addToCart}
+                                            type="submit"
+                                            className="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
+                                        >
+                                            Agregar al carrito
+                                        </button>}
 
-                                    <WishlistHeart 
+                                    <WishlistHeart
                                         addToWishlist={addToWishlist}
                                         product={product}
                                         wishlist={wishlist}
@@ -235,6 +320,50 @@ const ProductDetail = ({
                                 </h2>
                             </section>
                         </div>
+                        <section className="my-5 max-w-7xl">
+                            <div className="grid row-auto">
+                                <div>
+                                    {
+                                        review &&
+                                            review !== null &&
+                                            review !== undefined ?
+                                            <div>
+                                                delete this shiet
+                                            </div>
+                                            :
+                                            <>
+                                                <form onSubmit={e => create_review(e)}>
+                                                    <div class="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                                                        <div class="py-2 px-4 bg-white rounded-t-lg dark:bg-gray-800">
+                                                            <label for="comment" class="sr-only">Your comment</label>
+                                                            <textarea id="comment"
+                                                                name="comment"
+                                                                onChange={e => onChange(e)}
+                                                                value={comment}
+                                                                rows="2" cols="100" class=" resize-none px-0 w-full text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Escribe un comentario..." required=""></textarea>
+                                                        </div>
+                                                        <div class="flex justify-between items-center py-2 px-3 border-t dark:border-gray-600">
+                                                            <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                                                Post comment
+                                                            </button>
+                                                            <div class="flex pl-0 space-x-1 sm:pl-2">
+                                                                <StarRating></StarRating>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <p class="ml-auto text-xs text-gray-500 dark:text-gray-400">Remember, be kind <a href="#" class="text-blue-600 dark:text-blue-500 hover:underline"></a>.</p>
+                                            </>
+                                    }
+
+
+                                </div>
+
+                                <div className="col-span-3 mt-3">
+                                    {showReviews()}
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -243,10 +372,12 @@ const ProductDetail = ({
 }
 
 const mapStateToProps = state => ({
-    isAuthenticated:state.Auth.isAuthenticated,
+    isAuthenticated: state.Auth.isAuthenticated,
     product: state.Products.product,
     cart: state.Cart.items,
-    wishlist:state.Wishlist.items
+    wishlist: state.Wishlist.items,
+    review: state.Review.review,
+    reviews: state.Review.reviews
 })
 
 export default connect(mapStateToProps, {
@@ -260,4 +391,10 @@ export default connect(mapStateToProps, {
     get_wishlist,
     get_wishlist_item_total,
     remove_wishlist_item,
+    get_product_review,
+    get_product_reviews,
+    add_review,
+    update_review,
+    delete_review,
+    filter_reviews,
 })(ProductDetail);

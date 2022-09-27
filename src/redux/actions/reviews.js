@@ -62,7 +62,7 @@ export const get_product_reviews = productId => async dispatch =>{
 
         try{
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/reviews/get_reviews/${productId}`, config)
-            if (res.status === 200){
+            if (res.status === 200){                
                 dispatch({
                     type:GET_PRODUCT_REVIEWS_SUCCESS,
                     payload:res.data
@@ -95,7 +95,7 @@ export const add_review = (productId, rating, comment) => async dispatch =>{
             }
         }
                 
-        body = JSON.stringify({           
+        const body = JSON.stringify({           
             rating,
             comment
         })
@@ -131,7 +131,7 @@ export const update_review = (product_id, rating, comment) => async dispatch =>{
             }
         }
                 
-        body = JSON.stringify({           
+        const body = JSON.stringify({           
             rating,
             comment
         })   

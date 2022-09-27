@@ -25,15 +25,15 @@ class GetProductReviewsView(APIView):
             }, status = status.HTTP_400_BAD_REQUEST)
         
         try:
-            review = Review.objects.filter(product = product_id)
-            if review:
-                review = ReviewSerializer(review, many=True)
+            reviews = Review.objects.filter(product = product_id)
+            if reviews:
+                reviews = ReviewSerializer(reviews, many=True)
                 return Response({
-                    'reviews':review.data
+                    'reviews':reviews.data
                 }, status = status.HTTP_200_OK)
             else:
                 return Response({
-                    'reviews':''
+                    'reviews':[]
                 }, status = status.HTTP_200_OK)
 
         except:
