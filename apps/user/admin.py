@@ -3,8 +3,6 @@ from django.contrib import admin
 # Register your models here.
 from . import models
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'email', 'last_name','is_staff','is_superuser','is_active','last_login', )

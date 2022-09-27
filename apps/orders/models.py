@@ -2,10 +2,10 @@ from django.db import models
 from datetime import datetime
 from apps.product.models import Product
 from apps.orders.countries import Countries
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.utils import timezone
 
-user = get_user_model()
+
 
 # Create your models here.
 class Order(models.Model):
@@ -19,7 +19,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=50, choices=OrderStatus.choices, default=OrderStatus.not_processed
     )
-    user = models.ForeignKey(user, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     transaction_id = models.CharField(max_length=255, unique=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     full_name = models.CharField(max_length=255)
