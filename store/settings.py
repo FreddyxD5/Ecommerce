@@ -116,8 +116,19 @@ WSGI_APPLICATION = 'store.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': env.db("DATABASE_URL", default="postgres://store"),
+# }
+
 DATABASES = {
-    'default': env.db("DATABASE_URL", default="postgres://store"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd5je5r864agr88',
+        'USER': 'lrrylxmgmpqtkb',
+        'PASSWORD': 'e34666afb86013eb7b46b1859d8ad52f5433f3d60b5f7049f72fa8f7070bd414',
+        'HOST': 'ec2-44-207-133-100.compute-1.amazonaws.com',
+        'PORT': 5432,
+    }
 }
 
 DATABASES['default']['ATOMIC_REQUEST'] = True
@@ -127,7 +138,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',    
-    'https://django-react-ecommercev1.herokuapp.com/',
+    'https://django-react-ecommercev1.herokuapp.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -135,7 +146,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',    
-    'https://django-react-ecommercev1.herokuapp.com/',
+    'https://django-react-ecommercev1.herokuapp.com',
 ]
 
 # Password validation
