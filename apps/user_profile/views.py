@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from apps import user_profile
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response

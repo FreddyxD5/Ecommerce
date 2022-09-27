@@ -1,7 +1,4 @@
 import logging
-from re import T
-from tkinter import E
-from django.shortcuts import render
 from django.conf import settings
 
 from rest_framework import status

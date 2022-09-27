@@ -1,5 +1,4 @@
 from datetime import datetime
-from unicodedata import decimal
 from django.db import models
 from apps.category.models import Category
 # Create your models here.

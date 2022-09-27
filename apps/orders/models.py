@@ -1,5 +1,3 @@
-from pickletools import decimalnl_long
-from random import choices
 from django.db import models
 from datetime import datetime
 from apps.product.models import Product
