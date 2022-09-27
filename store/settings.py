@@ -20,7 +20,7 @@ DEBUG = True
 ALLOWED_HOSTS = [    
     '127.0.0.1',
     'localhost',
-    'https://django-react-ecommercev1.herokuapp.com/',
+    'django-react-ecommercev1.herokuapp.com/',
     ]
 
 
@@ -126,6 +126,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',    
+    'https://django-react-ecommercev1.herokuapp.com/',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -133,6 +134,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',    
+    'https://django-react-ecommercev1.herokuapp.com/',
 ]
 
 # Password validation
