@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from . import models
-
+from apps.user.models import UserAccount
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'email', 'last_name','is_staff','is_superuser','is_active','last_login', )
@@ -11,4 +11,4 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page=25
 
 
-admin.site.register(User, UserAdmin)
+admin.site.register(UserAccount, UserAdmin)
